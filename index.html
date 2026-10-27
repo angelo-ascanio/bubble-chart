@@ -4,9 +4,9 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>SYS Operational Bubble Chart - The Company</title>
-    <meta name="description" content="Interactive multi-dimensional bubble chart visualizing 25 operational improvement initiatives across 5 macro-domains for The Company." />
+    <meta name="description" content="Interactive multi-dimensional bubble chart visualizing 25 operational improvement initiatives across 5 macro-domains for SYS The Company." />
     <meta property="og:title" content="SYS Operational Bubble Chart" />
-    <meta property="og:description" content="Interactive multi-dimensional bubble chart visualizing 25 operational improvement initiatives across 5 macro-domains for The Company." />
+    <meta property="og:description" content="Interactive multi-dimensional bubble chart visualizing 25 operational improvement initiatives across 5 macro-domains for SYS The Company." />
     <meta property="og:type" content="website" />
     <meta name="twitter:card" content="summary_large_image" />
 
@@ -64,10 +64,12 @@
         -webkit-font-smoothing: antialiased;
       }
 
+      /* Tabular figures for data integrity */
       .tabular-nums {
         font-variant-numeric: tabular-nums;
       }
 
+      /* Header Bar */
       header {
         display: flex;
         align-items: center;
@@ -161,12 +163,23 @@
         border-color: rgba(255, 255, 255, 0.25);
       }
 
+      .btn-primary {
+        background: #0284c7;
+        color: #ffffff;
+        border-color: #0284c7;
+      }
+
+      .btn-primary:hover {
+        background: #0369a1;
+      }
+
       .btn-active {
         background: #10b981 !important;
         color: #ffffff !important;
         border-color: #059669 !important;
       }
 
+      /* Control Toolbar */
       .toolbar {
         display: flex;
         align-items: center;
@@ -192,6 +205,7 @@
         flex-wrap: wrap;
       }
 
+      /* Search Box */
       .search-box {
         position: relative;
         display: flex;
@@ -224,6 +238,7 @@
         pointer-events: none;
       }
 
+      /* Filter Chips for Domains */
       .domain-filters {
         display: flex;
         align-items: center;
@@ -267,6 +282,7 @@
         border-style: dashed;
       }
 
+      /* View Mode Segmented Control */
       .segmented-control {
         display: inline-flex;
         background: var(--bg-elevated);
@@ -294,6 +310,7 @@
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
       }
 
+      /* Sliders popover / inline controls */
       .slider-control {
         display: flex;
         align-items: center;
@@ -308,6 +325,7 @@
         cursor: pointer;
       }
 
+      /* Main Visualization Canvas */
       #chart-container {
         position: relative;
         flex: 1;
@@ -326,6 +344,7 @@
         cursor: grabbing;
       }
 
+      /* SVG Nodes and Styling */
       .bubble-node {
         cursor: pointer;
         transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease;
@@ -358,17 +377,60 @@
         text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
       }
 
-      .domain-centroid-label {
-        font-size: 13px;
-        font-weight: 800;
-        text-anchor: middle;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        pointer-events: none;
-        opacity: 0.45;
-        fill: var(--text-secondary);
+      /* Domain Boundaries / Clusters */
+      .domain-pod {
+        cursor: pointer;
       }
 
+      .domain-pod-circle {
+        cursor: pointer;
+        transition: fill-opacity 0.25s ease, stroke-opacity 0.25s ease, stroke-width 0.25s ease, filter 0.25s ease;
+      }
+
+      .domain-pod:hover .domain-pod-circle {
+        fill-opacity: 0.12 !important;
+        stroke-opacity: 0.85 !important;
+        stroke-width: 2.5px !important;
+        filter: drop-shadow(0 0 14px rgba(255, 255, 255, 0.25));
+      }
+
+      .domain-label-group {
+        cursor: pointer;
+        pointer-events: auto;
+        user-select: none;
+        transition: transform 0.2s ease, opacity 0.2s ease;
+      }
+
+      .domain-badge-bg {
+        backdrop-filter: blur(8px);
+        transition: all 0.2s ease;
+        filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.4));
+      }
+
+      .domain-label-group:hover .domain-badge-bg {
+        stroke-opacity: 1 !important;
+        stroke-width: 2px !important;
+        fill: var(--bg-elevated) !important;
+        filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.35)) !important;
+      }
+
+      .domain-label-group:hover text {
+        fill: #ffffff !important;
+        opacity: 1 !important;
+      }
+
+      .domain-centroid-label {
+        font-size: 10px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.6px;
+        fill: var(--text-primary);
+        opacity: 0.95;
+        pointer-events: none;
+        transition: all 0.2s ease;
+      }
+
+      /* Association Links */
       .assoc-link {
         fill: none;
         stroke-linecap: round;
@@ -377,6 +439,7 @@
         transition: stroke-opacity 0.25s, stroke-width 0.25s;
       }
 
+      /* Floating Tooltip */
       #tooltip {
         position: absolute;
         pointer-events: none;
@@ -415,6 +478,49 @@
         gap: 6px;
       }
 
+      .tooltip-kicker {
+        font-size: 10px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.6px;
+        color: var(--text-muted);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin-bottom: 4px;
+      }
+
+      .tt-dot {
+        display: inline-block;
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        flex-shrink: 0;
+      }
+
+      .tooltip-scope-block {
+        background: var(--bg-elevated);
+        border: 1px solid var(--border-color);
+        border-radius: 6px;
+        padding: 8px 10px;
+        margin: 6px 0;
+      }
+
+      .tooltip-scope-label {
+        font-size: 9px;
+        font-weight: 700;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 3px;
+      }
+
+      .tooltip-scope-text {
+        font-size: 11.5px;
+        line-height: 1.45;
+        color: var(--text-primary);
+      }
+
       .tooltip-metrics {
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -448,6 +554,7 @@
         color: var(--text-muted);
       }
 
+      /* Side Drawer */
       #drawer {
         position: fixed;
         top: 0;
@@ -618,9 +725,17 @@
         background: var(--text-muted);
       }
 
-      .bullet-pro::before { background: #10b981; }
-      .bullet-con::before { background: #f43f5e; }
-      .bullet-req::before { background: #0284c7; }
+      .bullet-pro::before {
+        background: #10b981;
+      }
+
+      .bullet-con::before {
+        background: #f43f5e;
+      }
+
+      .bullet-req::before {
+        background: #0284c7;
+      }
 
       .shared-badge-list {
         display: flex;
@@ -643,6 +758,7 @@
         border-color: rgba(255, 255, 255, 0.3);
       }
 
+      /* Quick Toast Notifications */
       #toast {
         position: fixed;
         bottom: 20px;
@@ -667,6 +783,7 @@
         transform: translateX(-50%) translateY(0);
       }
 
+      /* Modal backdrop when drawer is open on mobile */
       #backdrop {
         position: fixed;
         inset: 0;
@@ -683,6 +800,7 @@
         pointer-events: auto;
       }
 
+      /* Legend overlay in bottom left */
       .canvas-legend {
         position: absolute;
         bottom: 16px;
@@ -729,6 +847,7 @@
         border: 3px solid rgba(255, 255, 255, 0.9);
       }
 
+      /* Zoom controls floating in bottom right */
       .zoom-controls {
         position: absolute;
         bottom: 16px;
@@ -760,12 +879,23 @@
         background: var(--border-hover);
       }
 
+      /* Responsive rules */
       @media (max-width: 900px) {
-        .header-stats { display: none; }
-        .toolbar { padding: 8px 12px; }
-        .search-input { width: 150px; }
-        .domain-filters { display: none; }
-        :root { --drawer-width: 100vw; }
+        .header-stats {
+          display: none;
+        }
+        .toolbar {
+          padding: 8px 12px;
+        }
+        .search-input {
+          width: 150px;
+        }
+        .domain-filters {
+          display: none;
+        }
+        :root {
+          --drawer-width: 100vw;
+        }
       }
     </style>
   </head>
@@ -791,11 +921,11 @@
         </div>
         <div class="stat-item">
           <span>Quick Wins:</span>
-          <span class="stat-val tabular-nums" id="stat-quick-wins" style="color: #10b981;">5</span>
+          <span class="stat-val tabular-nums" id="stat-quick-wins" style="color: #10b981;">6</span>
         </div>
         <div class="stat-item">
           <span>Avg Importance:</span>
-          <span class="stat-val tabular-nums" id="stat-avg-imp">87.3</span>
+          <span class="stat-val tabular-nums" id="stat-avg-imp">88.2</span>
         </div>
       </div>
 
@@ -821,25 +951,32 @@
     <!-- Interactive Filter Toolbar -->
     <div class="toolbar">
       <div class="toolbar-left">
+        <!-- Search Input -->
         <div class="search-box">
           <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
           <input type="text" id="search-input" class="search-input" placeholder="Search 25 initiatives..." />
         </div>
 
-        <div class="domain-filters" id="domain-filters-container"></div>
+        <!-- Domain Filter Chips -->
+        <div class="domain-filters" id="domain-filters-container">
+          <!-- Populated by JS -->
+        </div>
       </div>
 
       <div class="toolbar-right">
+        <!-- Layout Mode Switch -->
         <div class="segmented-control" id="view-mode-control">
           <button class="segmented-btn active" data-mode="cluster">Cluster View</button>
           <button class="segmented-btn" data-mode="matrix">Matrix (Imp vs Comp)</button>
         </div>
 
+        <!-- Importance Slider -->
         <div class="slider-control" title="Filter minimum importance score">
           <span>Min Imp: <strong id="lbl-min-imp" class="tabular-nums">75</strong></span>
           <input type="range" id="slider-importance" min="75" max="96" value="75" />
         </div>
 
+        <!-- Reset Button -->
         <button class="btn" id="btn-reset-filters" style="font-size: 11px; padding: 4px 8px;">Reset</button>
       </div>
     </div>
@@ -865,7 +1002,7 @@
         <div class="tooltip-footer">Click node to inspect full dossier & connections</div>
       </div>
 
-      <!-- Canvas Legend -->
+      <!-- Canvas Legend (Visual encoding summary) -->
       <div class="canvas-legend">
         <div class="legend-title">Visual Dimensions</div>
         <div class="legend-row">
@@ -882,7 +1019,7 @@
         </div>
       </div>
 
-      <!-- Zoom Controls -->
+      <!-- Floating Zoom Controls -->
       <div class="zoom-controls">
         <button class="zoom-btn" id="btn-zoom-in" title="Zoom in">+</button>
         <button class="zoom-btn" id="btn-zoom-out" title="Zoom out">−</button>
@@ -905,6 +1042,7 @@
       </div>
 
       <div class="drawer-body">
+        <!-- KPI Score Cards -->
         <div class="score-cards-grid">
           <div class="score-card">
             <div class="score-title">Importance Score</div>
@@ -922,41 +1060,58 @@
           </div>
         </div>
 
+        <!-- Cross-Domain Associations -->
         <div class="section-block" id="drawer-assoc-block">
           <div class="section-header">Shared Cross-Domain Associations</div>
-          <div class="shared-badge-list" id="drawer-assoc-list"></div>
+          <div class="shared-badge-list" id="drawer-assoc-list">
+            <!-- Badges -->
+          </div>
         </div>
 
+        <!-- Pros (Strategic Advantages) -->
         <div class="section-block">
           <div class="section-header" style="color: #10b981;">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
             Strategic Advantages (Pros)
           </div>
-          <ul class="bullet-list" id="drawer-pros-list"></ul>
+          <ul class="bullet-list" id="drawer-pros-list">
+            <!-- Pros -->
+          </ul>
         </div>
 
+        <!-- Cons (Risks & Hurdles) -->
         <div class="section-block">
           <div class="section-header" style="color: #f43f5e;">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
             Operational Risks & Hurdles (Cons)
           </div>
-          <ul class="bullet-list" id="drawer-cons-list"></ul>
+          <ul class="bullet-list" id="drawer-cons-list">
+            <!-- Cons -->
+          </ul>
         </div>
 
+        <!-- Requirements (Technical Prerequisites) -->
         <div class="section-block">
           <div class="section-header" style="color: #38bdf8;">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
             Technical Prerequisites
           </div>
-          <ul class="bullet-list" id="drawer-reqs-list"></ul>
+          <ul class="bullet-list" id="drawer-reqs-list">
+            <!-- Requirements -->
+          </ul>
         </div>
       </div>
     </aside>
 
+    <!-- Feedback Toast -->
     <div id="toast">Code copied to clipboard!</div>
 
+    <!-- Application Logic & Data Script -->
     <script>
       (function () {
+        // -------------------------------------------------------------
+        // 1. DATASET
+        // -------------------------------------------------------------
         const DATA = {
           graph_metadata: {
             system: "SYS - Sistema Operativo Integrado The Company",
@@ -972,6 +1127,8 @@
               importance_score: 92,
               complexity_score: 75,
               color: "#0284c7",
+              light_color: "#e0f2fe",
+              glow: "rgba(2, 132, 199, 0.4)",
               metadata: {
                 category: "Core Infrastructure",
                 description: "Foundational transactional layer for case management, priority queuing, audit logging, and data deduplication."
@@ -983,6 +1140,8 @@
               importance_score: 88,
               complexity_score: 62,
               color: "#0d9488",
+              light_color: "#ccfbf1",
+              glow: "rgba(13, 148, 136, 0.4)",
               metadata: {
                 category: "Command & Control",
                 description: "Real-time visual monitoring systems, operational dashboards, status triaging, and auditor interfaces."
@@ -994,6 +1153,8 @@
               importance_score: 86,
               complexity_score: 55,
               color: "#10b981",
+              light_color: "#d1fae5",
+              glow: "rgba(16, 185, 129, 0.4)",
               metadata: {
                 category: "Workflow Governance",
                 description: "Automated SLA delay tracking, document verification triggers, process standardization, and RPA workflows."
@@ -1005,6 +1166,8 @@
               importance_score: 84,
               complexity_score: 50,
               color: "#f59e0b",
+              light_color: "#fef3c7",
+              glow: "rgba(245, 158, 11, 0.4)",
               metadata: {
                 category: "Partner Enablement",
                 description: "External third-party provider integration, digital SOP guidance, secure messaging, micro-training, and scorecards."
@@ -1016,6 +1179,8 @@
               importance_score: 90,
               complexity_score: 72,
               color: "#8b5cf6",
+              light_color: "#ede9fe",
+              glow: "rgba(139, 92, 246, 0.4)",
               metadata: {
                 category: "Advanced Intelligence",
                 description: "Cognitive operational analytics, root-cause anomaly detection, predictive SLA risk modeling, and embedded AI assistants."
@@ -1607,9 +1772,49 @@
           ]
         };
 
+        // Domain lookup map
         const domainMap = {};
-        DATA.parent_domains.forEach(d => { domainMap[d.id] = d; });
+        DATA.parent_domains.forEach(d => {
+          domainMap[d.id] = d;
+        });
 
+        // 5 Macro-Domain Containers metadata with Structural Scope
+        const Containers = [
+          {
+            "Identifier": "core_case_mgmt",
+            "Name": "Core Case Management",
+            "Structural_Scope": "Lifecycle tracking, dynamic priority queuing, full action traceability, data deduplication"
+          },
+          {
+            "Identifier": "ops_intelligence",
+            "Name": "Operational Intelligence & Visual Command",
+            "Structural_Scope": "Real-time monitoring, visual triage traffic lights, medical auditor workspace"
+          },
+          {
+            "Identifier": "process_automation",
+            "Name": "Process Automation & Workflow Governance",
+            "Structural_Scope": "SLA delay alerts, missing document triggers, workflow standardization, RPA engine"
+          },
+          {
+            "Identifier": "allied_network_ecosystem",
+            "Name": "Allied Network Ecosystem & Enablement",
+            "Structural_Scope": "Allied partner portal, digital SOPs, secure chat, micro-training, performance scorecards"
+          },
+          {
+            "Identifier": "analytics_predictive_ai",
+            "Name": "Analytics, Predictive AI & Knowledge Architecture",
+            "Structural_Scope": "Bottleneck KPIs, root-cause AI, predictive SLA alerts, smart search, SYS AI Assistant"
+          }
+        ];
+
+        const containerLookup = {};
+        Containers.forEach(c => {
+          containerLookup[c.Identifier] = c;
+        });
+
+        // -------------------------------------------------------------
+        // 2. STATE MANAGEMENT
+        // -------------------------------------------------------------
         const state = {
           selectedDomains: new Set(DATA.parent_domains.map(d => d.id)),
           searchQuery: "",
@@ -1617,19 +1822,27 @@
           quickWinsOnly: false,
           activeNodeId: null,
           hoveredNodeId: null,
-          viewMode: "cluster",
+          hoveredContainerId: null,
+          viewMode: "cluster", // "cluster" | "matrix"
           isDarkTheme: true
         };
 
+        // -------------------------------------------------------------
+        // 3. COLOR & SIZING SCALES
+        // -------------------------------------------------------------
         const impExtent = d3.extent(DATA.nodes, d => d.importance_score);
         const radiusScale = d3.scaleSqrt()
           .domain([impExtent[0] || 75, impExtent[1] || 100])
           .range([22, 68]);
 
+        // Pre-compute node radii
         DATA.nodes.forEach(n => {
           n.radius = radiusScale(n.importance_score);
         });
 
+        // -------------------------------------------------------------
+        // 4. DOM REFERENCES & SETUP
+        // -------------------------------------------------------------
         const container = document.getElementById("chart-container");
         const svg = d3.select("#chart-svg");
         const tooltip = document.getElementById("tooltip");
@@ -1640,39 +1853,71 @@
         let width = container.clientWidth || 1200;
         let height = container.clientHeight || 750;
 
+        // Container groups
         const gMain = svg.append("g").attr("class", "main-viewport");
         const gBackground = gMain.append("g").attr("class", "background-layer");
         const gLinks = gMain.append("g").attr("class", "links-layer");
         const gNodes = gMain.append("g").attr("class", "nodes-layer");
 
+        // SVG Filters for Glow Effect
         const defs = svg.append("defs");
         const filter = defs.append("filter")
           .attr("id", "bubble-glow")
-          .attr("x", "-50%").attr("y", "-50%")
-          .attr("width", "200%").attr("height", "200%");
-        filter.append("feGaussianBlur").attr("stdDeviation", "8").attr("result", "blur");
+          .attr("x", "-50%")
+          .attr("y", "-50%")
+          .attr("width", "200%")
+          .attr("height", "200%");
+        filter.append("feGaussianBlur")
+          .attr("stdDeviation", "8")
+          .attr("result", "blur");
         filter.append("feMerge")
           .selectAll("feMergeNode")
           .data(["blur", "SourceGraphic"])
-          .enter().append("feMergeNode").attr("in", d => d);
+          .enter().append("feMergeNode")
+          .attr("in", d => d);
 
+        // Marker for directed links if needed
+        defs.append("marker")
+          .attr("id", "link-arrow")
+          .attr("viewBox", "0 -5 10 10")
+          .attr("refX", 10)
+          .attr("refY", 0)
+          .attr("markerWidth", 6)
+          .attr("markerHeight", 6)
+          .attr("orient", "auto")
+          .append("path")
+          .attr("d", "M0,-5L10,0L0,5")
+          .attr("fill", "rgba(255,255,255,0.4)");
+
+        // -------------------------------------------------------------
+        // 5. ZOOM BEHAVIOR
+        // -------------------------------------------------------------
         const zoom = d3.zoom()
           .scaleExtent([0.35, 3.5])
-          .on("zoom", (event) => { gMain.attr("transform", event.transform); });
+          .on("zoom", (event) => {
+            gMain.attr("transform", event.transform);
+          });
 
         svg.call(zoom).on("dblclick.zoom", null);
 
+        // -------------------------------------------------------------
+        // 6. CENTROID COORDINATES CALCULATION
+        // -------------------------------------------------------------
         function computeDomainCentroids(w, h) {
           const cx = w / 2;
-          const cy = h / 2;
-          const r = Math.min(w, h) * 0.32;
+          const cy = h / 2 + 16;
+          const r = Math.min(w, h) * 0.27;
           const centroids = {};
           const domainIds = DATA.parent_domains.map(d => d.id);
+          const count = domainIds.length;
+
           domainIds.forEach((id, i) => {
-            const angle = (i * 2 * Math.PI) / domainIds.length - Math.PI / 2;
+            // Distribute 5 domains evenly in a pentagonal arrangement
+            const angle = (i * 2 * Math.PI) / count - Math.PI / 2;
             centroids[id] = {
               x: cx + r * Math.cos(angle),
-              y: cy + r * Math.sin(angle)
+              y: cy + r * Math.sin(angle),
+              angle: angle
             };
           });
           return centroids;
@@ -1680,67 +1925,172 @@
 
         let domainCentroids = computeDomainCentroids(width, height);
 
+        // -------------------------------------------------------------
+        // 7. D3 FORCE SIMULATION
+        // -------------------------------------------------------------
         const simulation = d3.forceSimulation(DATA.nodes)
-          .force("center", d3.forceCenter(width / 2, height / 2).strength(0.04))
+          .force("center", d3.forceCenter(width / 2, height / 2 + 16).strength(0.04))
           .force("collide", d3.forceCollide(d => d.radius + 6).strength(0.9))
           .force("x", d3.forceX(d => {
             if (state.viewMode === "matrix") {
+              // X mapped by Complexity (0 to 100)
               const xPadding = 120;
               return xPadding + (d.complexity_score / 100) * (width - xPadding * 2);
             }
-            return domainCentroids[d.parent_id]?.x || width / 2;
+            return domainCentroids[d.parent_id] ? domainCentroids[d.parent_id].x : width / 2;
           }).strength(d => state.viewMode === "matrix" ? 0.8 : 0.35))
           .force("y", d3.forceY(d => {
             if (state.viewMode === "matrix") {
+              // Y mapped inversely by Importance (high importance near top)
               const yPadding = 100;
               const norm = (d.importance_score - 75) / (100 - 75);
               return height - yPadding - norm * (height - yPadding * 2);
             }
-            return domainCentroids[d.parent_id]?.y || height / 2;
+            return domainCentroids[d.parent_id] ? domainCentroids[d.parent_id].y : height / 2 + 16;
           }).strength(d => state.viewMode === "matrix" ? 0.8 : 0.35))
           .force("charge", d3.forceManyBody().strength(-20))
           .alphaDecay(0.022);
 
+        // Drag handlers
         function dragstarted(event, d) {
           if (!event.active) simulation.alphaTarget(0.3).restart();
-          d.fx = d.x; d.fy = d.y;
-        }
-        function dragged(event, d) {
-          d.fx = event.x; d.fy = event.y;
-        }
-        function dragended(event, d) {
-          if (!event.active) simulation.alphaTarget(0);
-          d.fx = null; d.fy = null;
+          d.fx = d.x;
+          d.fy = d.y;
         }
 
+        function dragged(event, d) {
+          d.fx = event.x;
+          d.fy = event.y;
+        }
+
+        function dragended(event, d) {
+          if (!event.active) simulation.alphaTarget(0);
+          d.fx = null;
+          d.fy = null;
+        }
+
+        // -------------------------------------------------------------
+        // 8. RENDER BACKGROUND DOMAIN HULLS & MATRIX AXES
+        // -------------------------------------------------------------
         function renderBackground() {
           gBackground.selectAll("*").remove();
 
           if (state.viewMode === "cluster") {
+            const podRadius = Math.min(width, height) * 0.20;
+
+            // Draw soft circular pods for each domain centroid
             const pods = gBackground.selectAll(".domain-pod")
               .data(DATA.parent_domains)
-              .enter().append("g").attr("class", "domain-pod");
+              .enter()
+              .append("g")
+              .attr("class", "domain-pod")
+              .attr("data-domain-id", d => d.id);
 
+            // Container Pod Circle
             pods.append("circle")
+              .attr("class", "domain-pod-circle")
               .attr("cx", d => domainCentroids[d.id]?.x || 0)
               .attr("cy", d => domainCentroids[d.id]?.y || 0)
-              .attr("r", Math.min(width, height) * 0.22)
+              .attr("r", podRadius)
               .attr("fill", d => d.color)
               .attr("fill-opacity", 0.04)
               .attr("stroke", d => d.color)
-              .attr("stroke-opacity", 0.18)
+              .attr("stroke-opacity", 0.22)
               .attr("stroke-dasharray", "4 4")
-              .attr("stroke-width", 1.5);
+              .attr("stroke-width", 1.5)
+              .on("mouseenter", (event, d) => onContainerHover(event, d))
+              .on("mousemove", (event, d) => onContainerMove(event, d))
+              .on("mouseleave", (event, d) => onContainerLeave(event, d))
+              .on("click", (event, d) => onContainerClick(event, d));
 
-            pods.append("text")
-              .attr("class", "domain-centroid-label")
-              .attr("x", d => domainCentroids[d.id]?.x || 0)
-              .attr("y", d => (domainCentroids[d.id]?.y || 0) - Math.min(width, height) * 0.22 - 12)
-              .text(d => d.short_name);
+            // Container Outward Label Header Group (positioned outside main bubbles)
+            const labels = pods.append("g")
+              .attr("class", "domain-label-group")
+              .on("mouseenter", (event, d) => onContainerHover(event, d))
+              .on("mousemove", (event, d) => onContainerMove(event, d))
+              .on("mouseleave", (event, d) => onContainerLeave(event, d))
+              .on("click", (event, d) => onContainerClick(event, d));
+
+            labels.each(function (d) {
+              const centroid = domainCentroids[d.id];
+              if (!centroid) return;
+              const angle = centroid.angle;
+              const cos = Math.cos(angle);
+              const sin = Math.sin(angle);
+              // Push label outward along the radial line from center
+              const labelDist = podRadius + 32;
+              const rawLx = centroid.x + labelDist * cos;
+              const rawLy = centroid.y + labelDist * sin;
+
+              const labelTitle = d.short_name;
+              const domainInitiatives = DATA.nodes.filter(n => n.parent_id === d.id);
+              const badgeWidth = Math.max(165, labelTitle.length * 7.5 + 50);
+              const badgeHeight = 28;
+
+              // Clamp inside viewport so label never gets clipped off-screen
+              const clampedLx = Math.max(badgeWidth / 2 + 18, Math.min(width - badgeWidth / 2 - 18, rawLx));
+              const clampedLy = Math.max(badgeHeight / 2 + 16, Math.min(height - badgeHeight / 2 - 16, rawLy));
+
+              const g = d3.select(this)
+                .attr("transform", `translate(${clampedLx}, ${clampedLy})`);
+
+              // Frosted capsule pill background
+              g.append("rect")
+                .attr("class", "domain-badge-bg")
+                .attr("x", -badgeWidth / 2)
+                .attr("y", -badgeHeight / 2)
+                .attr("width", badgeWidth)
+                .attr("height", badgeHeight)
+                .attr("rx", 14)
+                .attr("fill", "var(--bg-card)")
+                .attr("stroke", d.color)
+                .attr("stroke-width", 1.5)
+                .attr("stroke-opacity", 0.55);
+
+              // Indicator dot
+              g.append("circle")
+                .attr("cx", -badgeWidth / 2 + 14)
+                .attr("cy", 0)
+                .attr("r", 4.5)
+                .attr("fill", d.color);
+
+              // Uppercase title label
+              g.append("text")
+                .attr("class", "domain-centroid-label")
+                .attr("x", -badgeWidth / 2 + 25)
+                .attr("y", 0)
+                .attr("dy", "0.36em")
+                .attr("fill", "var(--text-primary)")
+                .text(labelTitle.toUpperCase());
+
+              // Initiative counter badge inside pill
+              g.append("rect")
+                .attr("x", badgeWidth / 2 - 27)
+                .attr("y", -8)
+                .attr("width", 18)
+                .attr("height", 16)
+                .attr("rx", 8)
+                .attr("fill", d.color)
+                .attr("fill-opacity", 0.2);
+
+              g.append("text")
+                .attr("x", badgeWidth / 2 - 18)
+                .attr("y", 0)
+                .attr("dy", "0.35em")
+                .attr("text-anchor", "middle")
+                .attr("font-size", "9.5px")
+                .attr("font-weight", "700")
+                .attr("fill", d.color)
+                .text(domainInitiatives.length);
+            });
           } else if (state.viewMode === "matrix") {
+            // Draw 2D Matrix Grid: X = Complexity, Y = Importance
             const xPadding = 120;
             const yPadding = 100;
+
             const grid = gBackground.append("g").attr("class", "matrix-grid");
+
+            // Quadrant divider lines
             const midX = width / 2;
             const midY = height / 2;
 
@@ -1756,6 +2106,7 @@
               .attr("stroke", "rgba(255,255,255,0.12)")
               .attr("stroke-dasharray", "3 3");
 
+            // Quadrant Labels
             const qLabels = [
               { text: "QUICK WINS (High Impact, Low Effort)", x: xPadding + 30, y: yPadding + 20, color: "#10b981" },
               { text: "STRATEGIC BETS (High Impact, High Effort)", x: width - xPadding - 240, y: yPadding + 20, color: "#8b5cf6" },
@@ -1773,25 +2124,32 @@
                 .text(q.text);
             });
 
+            // Axes Labels
             grid.append("text")
               .attr("x", width / 2).attr("y", height - yPadding + 35)
               .attr("text-anchor", "middle")
               .attr("fill", "var(--text-secondary)")
-              .attr("font-size", "12px").attr("font-weight", "600")
+              .attr("font-size", "12px")
+              .attr("font-weight", "600")
               .text("Complexity Score (1 → 100) →");
 
             grid.append("text")
-              .attr("transform", "rotate(-90)")
+              .attr("transform", `rotate(-90)`)
               .attr("x", -height / 2).attr("y", xPadding - 35)
               .attr("text-anchor", "middle")
               .attr("fill", "var(--text-secondary)")
-              .attr("font-size", "12px").attr("font-weight", "600")
+              .attr("font-size", "12px")
+              .attr("font-weight", "600")
               .text("Importance Score (75 → 100) →");
           }
         }
 
+        // -------------------------------------------------------------
+        // 9. CROSS-DOMAIN CONNECTING LINKS
+        // -------------------------------------------------------------
         function updateLinks() {
           const linksData = [];
+
           const activeOrHovered = state.hoveredNodeId || state.activeNodeId;
 
           if (activeOrHovered) {
@@ -1815,7 +2173,9 @@
 
           linkSelection.exit().remove();
 
-          const enterLinks = linkSelection.enter().append("path").attr("class", "assoc-link");
+          const enterLinks = linkSelection.enter()
+            .append("path")
+            .attr("class", "assoc-link");
 
           enterLinks.merge(linkSelection)
             .attr("stroke", d => domainMap[d.domainId]?.color || "#ffffff")
@@ -1826,6 +2186,7 @@
               const sy = d.sourceNode.y;
               const tx = d.targetCentroid.x;
               const ty = d.targetCentroid.y;
+              // Smooth quadratic Bezier curve
               const dx = tx - sx;
               const dy = ty - sy;
               const cx = (sx + tx) / 2 - dy * 0.2;
@@ -1834,58 +2195,83 @@
             });
         }
 
+        // -------------------------------------------------------------
+        // 10. RENDER BUBBLE NODES
+        // -------------------------------------------------------------
         let nodeElements = null;
 
         function renderNodes() {
           nodeElements = gNodes.selectAll(".bubble-node")
             .data(DATA.nodes, d => d.id)
-            .join(enter => {
-              const g = enter.append("g")
-                .attr("class", "bubble-node")
-                .call(d3.drag()
-                  .on("start", dragstarted)
-                  .on("drag", dragged)
-                  .on("end", dragended))
-                .on("mouseenter", (event, d) => onNodeHover(event, d))
-                .on("mousemove", (event, d) => onNodeMove(event, d))
-                .on("mouseleave", (event, d) => onNodeLeave(event, d))
-                .on("click", (event, d) => onNodeClick(event, d));
+            .join(
+              enter => {
+                const g = enter.append("g")
+                  .attr("class", "bubble-node")
+                  .call(d3.drag()
+                    .on("start", dragstarted)
+                    .on("drag", dragged)
+                    .on("end", dragended))
+                  .on("mouseenter", (event, d) => onNodeHover(event, d))
+                  .on("mousemove", (event, d) => onNodeMove(event, d))
+                  .on("mouseleave", (event, d) => onNodeLeave(event, d))
+                  .on("click", (event, d) => onNodeClick(event, d));
 
-              g.append("circle")
-                .attr("class", "outer-ring")
-                .attr("r", d => d.radius)
-                .attr("fill", d => domainMap[d.parent_id]?.color || "#0284c7")
-                .attr("fill-opacity", 0.82)
-                .attr("stroke", d => domainMap[d.parent_id]?.color || "#ffffff")
-                .attr("stroke-width", d => 2 + (d.complexity_score / 100) * 4.5)
-                .attr("stroke-opacity", d => 0.5 + (d.complexity_score / 100) * 0.5);
+                // Outer Complexity Ring (Dictated by complexity_score)
+                g.append("circle")
+                  .attr("class", "outer-ring")
+                  .attr("r", d => d.radius)
+                  .attr("fill", d => domainMap[d.parent_id]?.color || "#0284c7")
+                  .attr("fill-opacity", 0.82)
+                  .attr("stroke", d => {
+                    const domain = domainMap[d.parent_id];
+                    return domain ? domain.color : "#ffffff";
+                  })
+                  .attr("stroke-width", d => {
+                    // Higher complexity = thicker outer ring (2px to 6.5px)
+                    return 2 + (d.complexity_score / 100) * 4.5;
+                  })
+                  .attr("stroke-opacity", d => {
+                    // Higher complexity = darker / more opaque ring
+                    return 0.5 + (d.complexity_score / 100) * 0.5;
+                  });
 
-              g.append("circle")
-                .attr("class", "inner-ring")
-                .attr("r", d => Math.max(0, d.radius - 3.5))
-                .attr("fill", "none")
-                .attr("stroke", "rgba(255, 255, 255, 0.25)")
-                .attr("stroke-width", 1);
+                // Inner decorative ring
+                g.append("circle")
+                  .attr("class", "inner-ring")
+                  .attr("r", d => Math.max(0, d.radius - 3.5))
+                  .attr("fill", "none")
+                  .attr("stroke", "rgba(255, 255, 255, 0.25)")
+                  .attr("stroke-width", 1);
 
-              g.append("text").attr("class", "node-label").attr("y", -3);
+                // Short Name Label (Multi-line wrapped inside circle)
+                const text = g.append("text")
+                  .attr("class", "node-label")
+                  .attr("y", -3);
 
-              g.append("text")
-                .attr("class", "node-sub")
-                .attr("y", d => Math.min(18, d.radius * 0.42))
-                .text(d => `★${d.importance_score} · c${d.complexity_score}`);
+                // Value subtext (Importance & Complexity)
+                g.append("text")
+                  .attr("class", "node-sub")
+                  .attr("y", d => Math.min(18, d.radius * 0.42))
+                  .text(d => `★${d.importance_score} · c${d.complexity_score}`);
 
-              return g;
-            });
+                return g;
+              }
+            );
 
+          // Format multi-line wrapped labels
           nodeElements.each(function (d) {
             const el = d3.select(this).select(".node-label");
             el.selectAll("tspan").remove();
+
             const words = d.short_name.split(/\s+/);
             const radius = d.radius;
+
+            // Choose font size based on radius
             const fontSize = radius > 55 ? 12 : (radius > 40 ? 10.5 : 9);
             el.style("font-size", `${fontSize}px`);
 
             if (words.length <= 2 || radius < 34) {
+              // 1 or 2 words or small bubble
               if (words.length > 2) {
                 el.append("tspan").attr("x", 0).attr("dy", "-0.2em").text(words.slice(0, 2).join(" "));
                 el.append("tspan").attr("x", 0).attr("dy", "1.15em").text(words.slice(2).join(" "));
@@ -1893,17 +2279,24 @@
                 el.append("tspan").attr("x", 0).attr("dy", "0.3em").text(d.short_name);
               }
             } else {
+              // 3+ words: split into 2 lines
               const mid = Math.ceil(words.length / 2);
-              el.append("tspan").attr("x", 0).attr("dy", "-0.35em").text(words.slice(0, mid).join(" "));
-              el.append("tspan").attr("x", 0).attr("dy", "1.15em").text(words.slice(mid).join(" "));
+              const line1 = words.slice(0, mid).join(" ");
+              const line2 = words.slice(mid).join(" ");
+              el.append("tspan").attr("x", 0).attr("dy", "-0.35em").text(line1);
+              el.append("tspan").attr("x", 0).attr("dy", "1.15em").text(line2);
             }
           });
 
           applyFiltering();
         }
 
+        // -------------------------------------------------------------
+        // 11. FILTERING & HIGHLIGHTING
+        // -------------------------------------------------------------
         function applyFiltering() {
           if (!nodeElements) return;
+
           const q = state.searchQuery.trim().toLowerCase();
           let matchCount = 0;
 
@@ -1924,13 +2317,17 @@
             }
 
             const isVisible = isDomainActive && isImpActive && matchesQuickWin && matchesSearch;
+
             if (isVisible) matchCount++;
 
             const el = d3.select(this);
 
+            // Opacity & interactive state
             if (!isVisible) {
-              el.style("opacity", 0.08).style("pointer-events", "none");
+              el.style("opacity", 0.08)
+                .style("pointer-events", "none");
             } else {
+              // Check if another node is hovered / active
               const activeId = state.hoveredNodeId || state.activeNodeId;
               if (activeId) {
                 const activeNode = DATA.nodes.find(n => n.id === activeId);
@@ -1940,22 +2337,38 @@
                 const isSameParent = activeNode?.parent_id === d.parent_id;
 
                 if (isSelf) {
-                  el.style("opacity", 1).attr("filter", "url(#bubble-glow)");
+                  el.style("opacity", 1)
+                    .attr("filter", "url(#bubble-glow)");
                 } else if (isSharedMatch || isSameParent) {
-                  el.style("opacity", 0.95).attr("filter", null);
+                  el.style("opacity", 0.95)
+                    .attr("filter", null);
+                } else {
+                  el.style("opacity", 0.18)
+                    .attr("filter", null);
+                }
+              } else if (state.hoveredContainerId) {
+                // If hovering a container pod, highlight its bubbles and dim others
+                if (d.parent_id === state.hoveredContainerId) {
+                  el.style("opacity", 1).attr("filter", null);
                 } else {
                   el.style("opacity", 0.18).attr("filter", null);
                 }
               } else {
-                el.style("opacity", 1).style("pointer-events", "auto").attr("filter", null);
+                el.style("opacity", 1)
+                  .style("pointer-events", "auto")
+                  .attr("filter", null);
               }
             }
           });
 
+          // Update stats
           const totalStat = document.getElementById("stat-total");
           if (totalStat) totalStat.textContent = `${matchCount} / 25`;
         }
 
+        // -------------------------------------------------------------
+        // 12. TICK UPDATE
+        // -------------------------------------------------------------
         simulation.on("tick", () => {
           if (nodeElements) {
             nodeElements.attr("transform", d => `translate(${d.x},${d.y})`);
@@ -1963,26 +2376,115 @@
           updateLinks();
         });
 
+        // -------------------------------------------------------------
+        // 13. HOVER & TOOLTIP LOGIC
+        // -------------------------------------------------------------
         function onNodeHover(event, d) {
           state.hoveredNodeId = d.id;
           applyFiltering();
           updateLinks();
 
           const domain = domainMap[d.parent_id];
-          document.getElementById("tt-title").textContent = d.short_name;
-          document.getElementById("tt-domain").innerHTML = `
-            <span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:${domain?.color || '#0284c7'};"></span>
-            ${domain?.short_name || d.parent_id}
+          tooltip.innerHTML = `
+            <div class="tooltip-title">${d.short_name}</div>
+            <div class="tooltip-domain">
+              <span class="tt-dot" style="background:${domain?.color || '#0284c7'};"></span>
+              ${domain?.short_name || d.parent_id}
+            </div>
+            <div class="tooltip-metrics">
+              <div class="metric-box">
+                <span class="metric-label">Importance</span>
+                <span class="metric-val tabular-nums" style="color: #38bdf8;">${d.importance_score}</span>
+              </div>
+              <div class="metric-box">
+                <span class="metric-label">Complexity</span>
+                <span class="metric-val tabular-nums" style="color: #fb923c;">${d.complexity_score}</span>
+              </div>
+            </div>
+            <div class="tooltip-footer">Click node to inspect full dossier & connections</div>
           `;
-          document.getElementById("tt-imp").textContent = d.importance_score;
-          document.getElementById("tt-comp").textContent = d.complexity_score;
 
           tooltip.classList.add("visible");
           positionTooltip(event);
         }
 
-        function onNodeMove(event) {
+        function onNodeMove(event, d) {
           positionTooltip(event);
+        }
+
+        function onNodeLeave() {
+          state.hoveredNodeId = null;
+          tooltip.classList.remove("visible");
+          applyFiltering();
+          updateLinks();
+        }
+
+        // Container Hover & Click Handlers (Only in Cluster View)
+        function onContainerHover(event, d) {
+          state.hoveredContainerId = d.id;
+          applyFiltering();
+
+          const containerInfo = containerLookup[d.id] || {
+            Identifier: d.id,
+            Name: d.short_name,
+            Structural_Scope: d.metadata?.description || ""
+          };
+
+          const domainInitiatives = DATA.nodes.filter(n => n.parent_id === d.id);
+          const avgImp = (domainInitiatives.reduce((acc, n) => acc + n.importance_score, 0) / (domainInitiatives.length || 1)).toFixed(1);
+          const avgComp = (domainInitiatives.reduce((acc, n) => acc + n.complexity_score, 0) / (domainInitiatives.length || 1)).toFixed(1);
+
+          tooltip.innerHTML = `
+            <div class="tooltip-kicker">
+              <span class="tt-dot" style="background:${d.color}"></span>
+              Macro-Domain Container
+            </div>
+            <div class="tooltip-title" style="font-size: 13.5px; margin-bottom: 6px;">${containerInfo.Name}</div>
+            <div class="tooltip-scope-block">
+              <div class="tooltip-scope-label">Structural Scope</div>
+              <div class="tooltip-scope-text">${containerInfo.Structural_Scope}</div>
+            </div>
+            <div class="tooltip-metrics" style="margin-top: 8px;">
+              <div class="metric-box">
+                <span class="metric-label">Initiatives</span>
+                <span class="metric-val tabular-nums" style="color:${d.color};">${domainInitiatives.length}</span>
+              </div>
+              <div class="metric-box">
+                <span class="metric-label">Avg Importance</span>
+                <span class="metric-val tabular-nums" style="color:#38bdf8;">${avgImp}</span>
+              </div>
+              <div class="metric-box">
+                <span class="metric-label">Avg Complexity</span>
+                <span class="metric-val tabular-nums" style="color:#fb923c;">${avgComp}</span>
+              </div>
+            </div>
+            <div class="tooltip-footer">Click container to isolate this domain · Click again to restore</div>
+          `;
+
+          tooltip.classList.add("visible");
+          positionTooltip(event);
+        }
+
+        function onContainerMove(event, d) {
+          positionTooltip(event);
+        }
+
+        function onContainerLeave(event, d) {
+          state.hoveredContainerId = null;
+          tooltip.classList.remove("visible");
+          applyFiltering();
+        }
+
+        function onContainerClick(event, d) {
+          event.stopPropagation();
+          if (state.selectedDomains.size === 1 && state.selectedDomains.has(d.id)) {
+            state.selectedDomains = new Set(DATA.parent_domains.map(p => p.id));
+          } else {
+            state.selectedDomains.clear();
+            state.selectedDomains.add(d.id);
+          }
+          updateDomainChipButtons();
+          applyFiltering();
         }
 
         function positionTooltip(event) {
@@ -1993,13 +2495,9 @@
           tooltip.style.top = `${y}px`;
         }
 
-        function onNodeLeave() {
-          state.hoveredNodeId = null;
-          tooltip.classList.remove("visible");
-          applyFiltering();
-          updateLinks();
-        }
-
+        // -------------------------------------------------------------
+        // 14. CLICK & DETAIL DRAWER LOGIC
+        // -------------------------------------------------------------
         function onNodeClick(event, d) {
           event.stopPropagation();
           state.activeNodeId = d.id;
@@ -2011,6 +2509,7 @@
         function openDrawer(d) {
           const domain = domainMap[d.parent_id];
 
+          // Set domain tag
           const tag = document.getElementById("drawer-domain-tag");
           tag.innerHTML = `
             <span style="display:inline-block; width:9px; height:9px; border-radius:50%; background:${domain?.color};"></span>
@@ -2018,9 +2517,11 @@
           `;
           tag.style.color = domain?.color || "var(--text-secondary)";
 
+          // Title & Category
           document.getElementById("drawer-title").textContent = d.short_name;
           document.getElementById("drawer-category").textContent = d.metadata.category;
 
+          // Score bars
           document.getElementById("drawer-imp-val").textContent = d.importance_score;
           const impBar = document.getElementById("drawer-imp-bar");
           impBar.style.width = `${d.importance_score}%`;
@@ -2031,6 +2532,7 @@
           compBar.style.width = `${d.complexity_score}%`;
           compBar.style.background = d.complexity_score > 70 ? "#ef4444" : (d.complexity_score > 50 ? "#f59e0b" : "#10b981");
 
+          // Shared Associations
           const assocList = document.getElementById("drawer-assoc-list");
           assocList.innerHTML = "";
           if (Array.isArray(d.shared_associations) && d.shared_associations.length > 0) {
@@ -2044,6 +2546,7 @@
                 ${assocDomain?.short_name || assocId}
               `;
               badge.onclick = () => {
+                // Focus associated domain
                 state.selectedDomains.clear();
                 state.selectedDomains.add(assocId);
                 updateDomainChipButtons();
@@ -2055,6 +2558,7 @@
             document.getElementById("drawer-assoc-block").style.display = "none";
           }
 
+          // Pros
           const prosList = document.getElementById("drawer-pros-list");
           prosList.innerHTML = "";
           d.metadata.pros.forEach(pro => {
@@ -2064,6 +2568,7 @@
             prosList.appendChild(li);
           });
 
+          // Cons
           const consList = document.getElementById("drawer-cons-list");
           consList.innerHTML = "";
           d.metadata.cons.forEach(con => {
@@ -2073,6 +2578,7 @@
             consList.appendChild(li);
           });
 
+          // Requirements
           const reqsList = document.getElementById("drawer-reqs-list");
           reqsList.innerHTML = "";
           d.metadata.requirements.forEach(req => {
@@ -2103,6 +2609,9 @@
           if (e.key === "Escape") closeDrawer();
         });
 
+        // -------------------------------------------------------------
+        // 15. TOOLBAR & FILTER CONTROLS WIRING
+        // -------------------------------------------------------------
         const domainFiltersContainer = document.getElementById("domain-filters-container");
 
         function setupDomainChips() {
@@ -2117,6 +2626,7 @@
                 if (state.selectedDomains.size > 1) {
                   state.selectedDomains.delete(d.id);
                 } else {
+                  // Re-enable all if clicking last one off
                   state.selectedDomains = new Set(DATA.parent_domains.map(p => p.id));
                 }
               } else {
@@ -2133,18 +2643,24 @@
           const chips = domainFiltersContainer.querySelectorAll(".domain-chip");
           chips.forEach(chip => {
             const id = chip.dataset.domainId;
-            chip.className = state.selectedDomains.has(id) ? "domain-chip active" : "domain-chip inactive";
+            if (state.selectedDomains.has(id)) {
+              chip.className = "domain-chip active";
+            } else {
+              chip.className = "domain-chip inactive";
+            }
           });
         }
 
         setupDomainChips();
 
+        // Search input
         const searchInput = document.getElementById("search-input");
         searchInput.addEventListener("input", (e) => {
           state.searchQuery = e.target.value;
           applyFiltering();
         });
 
+        // Quick wins toggle
         const btnQuickWins = document.getElementById("btn-quick-wins");
         btnQuickWins.addEventListener("click", () => {
           state.quickWinsOnly = !state.quickWinsOnly;
@@ -2152,6 +2668,7 @@
           applyFiltering();
         });
 
+        // Importance slider
         const sliderImp = document.getElementById("slider-importance");
         const lblMinImp = document.getElementById("lbl-min-imp");
         sliderImp.addEventListener("input", (e) => {
@@ -2160,14 +2677,17 @@
           applyFiltering();
         });
 
+        // View Mode Switch (Cluster vs Matrix)
         const viewModeBtns = document.querySelectorAll("#view-mode-control .segmented-btn");
         viewModeBtns.forEach(btn => {
           btn.addEventListener("click", () => {
             viewModeBtns.forEach(b => b.classList.remove("active"));
             btn.classList.add("active");
             state.viewMode = btn.dataset.mode;
+
             renderBackground();
 
+            // Re-tune simulation forces for new view
             if (state.viewMode === "matrix") {
               simulation.force("collide").strength(0.65);
               simulation.force("x").strength(0.85);
@@ -2181,6 +2701,7 @@
           });
         });
 
+        // Reset Filters Button
         document.getElementById("btn-reset-filters").addEventListener("click", () => {
           state.selectedDomains = new Set(DATA.parent_domains.map(d => d.id));
           state.searchQuery = "";
@@ -2195,6 +2716,9 @@
           resetZoom();
         });
 
+        // -------------------------------------------------------------
+        // 16. ZOOM CONTROLS
+        // -------------------------------------------------------------
         function resetZoom() {
           svg.transition().duration(600).call(
             zoom.transform,
@@ -2210,10 +2734,15 @@
         };
         document.getElementById("btn-zoom-reset").onclick = resetZoom;
 
+        // -------------------------------------------------------------
+        // 17. COPY SINGLE HTML & EXPORT ACTIONS
+        // -------------------------------------------------------------
         function showToast(msg) {
           toast.textContent = msg;
           toast.classList.add("visible");
-          setTimeout(() => { toast.classList.remove("visible"); }, 3000);
+          setTimeout(() => {
+            toast.classList.remove("visible");
+          }, 3000);
         }
 
         document.getElementById("btn-copy-code").addEventListener("click", () => {
@@ -2221,7 +2750,7 @@
           navigator.clipboard.writeText(fullHtml).then(() => {
             showToast("Entire single HTML file copied to clipboard!");
           }).catch(() => {
-            showToast("Copied to clipboard!");
+            showToast("Failed to copy automatically. Use browser inspect or download button.");
           });
         });
 
@@ -2239,6 +2768,9 @@
           showToast("Downloaded sys_operational_bubble_chart.html!");
         });
 
+        // -------------------------------------------------------------
+        // 18. THEME TOGGLE
+        // -------------------------------------------------------------
         const btnTheme = document.getElementById("btn-theme");
         btnTheme.addEventListener("click", () => {
           state.isDarkTheme = !state.isDarkTheme;
@@ -2249,26 +2781,37 @@
           }
         });
 
+        // -------------------------------------------------------------
+        // 19. WINDOW RESIZE HANDLING
+        // -------------------------------------------------------------
         function handleResize() {
           width = container.clientWidth || 1200;
           height = container.clientHeight || 750;
+
           domainCentroids = computeDomainCentroids(width, height);
+
           simulation.force("center", d3.forceCenter(width / 2, height / 2));
           simulation.alpha(0.3).restart();
+
           renderBackground();
         }
 
         window.addEventListener("resize", handleResize);
 
+        // -------------------------------------------------------------
+        // 20. INITIAL RENDER
+        // -------------------------------------------------------------
         renderBackground();
         renderNodes();
 
+        // Canvas click deselects active node
         svg.on("click", (e) => {
           if (e.target.tagName === "svg" || e.target.classList.contains("background-layer")) {
             closeDrawer();
           }
         });
 
+        // Compute summary metrics
         const avgImp = (DATA.nodes.reduce((acc, n) => acc + n.importance_score, 0) / DATA.nodes.length).toFixed(1);
         const quickWinsCount = DATA.nodes.filter(n => n.importance_score >= 85 && n.complexity_score <= 55).length;
         document.getElementById("stat-avg-imp").textContent = avgImp;

@@ -1,0 +1,2279 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SYS Operational Bubble Chart - The Company</title>
+    <meta name="description" content="Interactive multi-dimensional bubble chart visualizing 25 operational improvement initiatives across 5 macro-domains for The Company." />
+    <meta property="og:title" content="SYS Operational Bubble Chart" />
+    <meta property="og:description" content="Interactive multi-dimensional bubble chart visualizing 25 operational improvement initiatives across 5 macro-domains for The Company." />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <!-- D3.js v7 CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+
+    <style>
+      :root {
+        --bg-primary: #0a0f1d;
+        --bg-secondary: #111827;
+        --bg-card: rgba(17, 24, 39, 0.85);
+        --bg-elevated: #1f293d;
+        --text-primary: #f8fafc;
+        --text-secondary: #94a3b8;
+        --text-muted: #64748b;
+        --border-color: rgba(255, 255, 255, 0.08);
+        --border-hover: rgba(255, 255, 255, 0.2);
+        --accent-core: #0284c7;
+        --accent-ops: #0d9488;
+        --accent-process: #10b981;
+        --accent-allied: #f59e0b;
+        --accent-ai: #8b5cf6;
+        --drawer-width: 440px;
+        --font-stack: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      }
+
+      [data-theme="light"] {
+        --bg-primary: #f8fafc;
+        --bg-secondary: #ffffff;
+        --bg-card: rgba(255, 255, 255, 0.95);
+        --bg-elevated: #f1f5f9;
+        --text-primary: #0f172a;
+        --text-secondary: #475569;
+        --text-muted: #94a3b8;
+        --border-color: rgba(0, 0, 0, 0.08);
+        --border-hover: rgba(0, 0, 0, 0.2);
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: var(--font-stack);
+        background-color: var(--bg-primary);
+        color: var(--text-primary);
+        overflow: hidden;
+        height: 100vh;
+        width: 100vw;
+        display: flex;
+        flex-direction: column;
+        user-select: none;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      .tabular-nums {
+        font-variant-numeric: tabular-nums;
+      }
+
+      header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px 20px;
+        background: var(--bg-secondary);
+        border-bottom: 1px solid var(--border-color);
+        z-index: 20;
+        gap: 16px;
+        flex-shrink: 0;
+      }
+
+      .brand-zone {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .brand-logo-badge {
+        width: 34px;
+        height: 34px;
+        border-radius: 8px;
+        background: linear-gradient(135deg, #0284c7, #8b5cf6);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 800;
+        font-size: 14px;
+        color: #ffffff;
+        letter-spacing: 0.5px;
+        box-shadow: 0 2px 8px rgba(2, 132, 199, 0.35);
+      }
+
+      .brand-title {
+        font-size: 15px;
+        font-weight: 700;
+        color: var(--text-primary);
+        white-space: nowrap;
+      }
+
+      .brand-sub {
+        font-size: 12px;
+        color: var(--text-secondary);
+        font-weight: 400;
+      }
+
+      .header-stats {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        font-size: 12px;
+        color: var(--text-secondary);
+      }
+
+      .stat-item {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .stat-val {
+        font-weight: 700;
+        color: var(--text-primary);
+      }
+
+      .header-actions {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        padding: 6px 12px;
+        font-size: 12px;
+        font-weight: 600;
+        border-radius: 6px;
+        border: 1px solid var(--border-color);
+        background: var(--bg-elevated);
+        color: var(--text-primary);
+        cursor: pointer;
+        transition: all 0.15s ease;
+        white-space: nowrap;
+      }
+
+      .btn:hover {
+        background: var(--border-hover);
+        border-color: rgba(255, 255, 255, 0.25);
+      }
+
+      .btn-active {
+        background: #10b981 !important;
+        color: #ffffff !important;
+        border-color: #059669 !important;
+      }
+
+      .toolbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 8px 20px;
+        background: rgba(17, 24, 39, 0.7);
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid var(--border-color);
+        z-index: 15;
+        gap: 16px;
+        flex-wrap: wrap;
+        flex-shrink: 0;
+      }
+
+      [data-theme="light"] .toolbar {
+        background: rgba(255, 255, 255, 0.85);
+      }
+
+      .toolbar-left, .toolbar-right {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+
+      .search-box {
+        position: relative;
+        display: flex;
+        align-items: center;
+      }
+
+      .search-input {
+        background: var(--bg-elevated);
+        border: 1px solid var(--border-color);
+        color: var(--text-primary);
+        font-size: 12px;
+        padding: 6px 12px 6px 30px;
+        border-radius: 6px;
+        outline: none;
+        width: 210px;
+        transition: width 0.2s, border-color 0.2s;
+      }
+
+      .search-input:focus {
+        border-color: #0284c7;
+        width: 250px;
+      }
+
+      .search-icon {
+        position: absolute;
+        left: 10px;
+        width: 14px;
+        height: 14px;
+        color: var(--text-muted);
+        pointer-events: none;
+      }
+
+      .domain-filters {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        flex-wrap: wrap;
+      }
+
+      .domain-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 5px 10px;
+        font-size: 11px;
+        font-weight: 600;
+        border-radius: 6px;
+        border: 1px solid var(--border-color);
+        background: var(--bg-elevated);
+        color: var(--text-secondary);
+        cursor: pointer;
+        transition: all 0.15s ease;
+        white-space: nowrap;
+      }
+
+      .domain-chip .dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+      }
+
+      .domain-chip.active {
+        color: var(--text-primary);
+        border-color: rgba(255, 255, 255, 0.3);
+      }
+
+      [data-theme="light"] .domain-chip.active {
+        border-color: rgba(0, 0, 0, 0.3);
+      }
+
+      .domain-chip.inactive {
+        opacity: 0.45;
+        border-style: dashed;
+      }
+
+      .segmented-control {
+        display: inline-flex;
+        background: var(--bg-elevated);
+        padding: 2px;
+        border-radius: 6px;
+        border: 1px solid var(--border-color);
+      }
+
+      .segmented-btn {
+        padding: 4px 10px;
+        font-size: 11px;
+        font-weight: 600;
+        border: none;
+        background: transparent;
+        color: var(--text-secondary);
+        border-radius: 4px;
+        cursor: pointer;
+        transition: all 0.15s;
+        white-space: nowrap;
+      }
+
+      .segmented-btn.active {
+        background: var(--bg-secondary);
+        color: var(--text-primary);
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+      }
+
+      .slider-control {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 11px;
+        color: var(--text-secondary);
+      }
+
+      .slider-control input[type="range"] {
+        width: 80px;
+        accent-color: #0284c7;
+        cursor: pointer;
+      }
+
+      #chart-container {
+        position: relative;
+        flex: 1;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+      }
+
+      svg#chart-svg {
+        width: 100%;
+        height: 100%;
+        cursor: grab;
+      }
+
+      svg#chart-svg:active {
+        cursor: grabbing;
+      }
+
+      .bubble-node {
+        cursor: pointer;
+        transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease;
+      }
+
+      .bubble-node circle {
+        transition: stroke-width 0.2s ease, filter 0.2s ease;
+      }
+
+      .bubble-node:hover circle {
+        filter: drop-shadow(0 0 14px rgba(255, 255, 255, 0.45));
+      }
+
+      .node-label {
+        font-size: 11px;
+        font-weight: 600;
+        text-anchor: middle;
+        pointer-events: none;
+        fill: #ffffff;
+        text-shadow: 0 1px 4px rgba(0, 0, 0, 0.9);
+      }
+
+      .node-sub {
+        font-size: 9px;
+        font-weight: 500;
+        text-anchor: middle;
+        pointer-events: none;
+        fill: rgba(255, 255, 255, 0.85);
+        font-variant-numeric: tabular-nums;
+        text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
+      }
+
+      .domain-centroid-label {
+        font-size: 13px;
+        font-weight: 800;
+        text-anchor: middle;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        pointer-events: none;
+        opacity: 0.45;
+        fill: var(--text-secondary);
+      }
+
+      .assoc-link {
+        fill: none;
+        stroke-linecap: round;
+        stroke-dasharray: 6 4;
+        pointer-events: none;
+        transition: stroke-opacity 0.25s, stroke-width 0.25s;
+      }
+
+      #tooltip {
+        position: absolute;
+        pointer-events: none;
+        background: var(--bg-card);
+        backdrop-filter: blur(12px);
+        border: 1px solid var(--border-color);
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+        padding: 12px 16px;
+        border-radius: 8px;
+        font-size: 12px;
+        max-width: 320px;
+        opacity: 0;
+        transform: translate(-50%, -100%) translateY(-12px);
+        transition: opacity 0.15s ease, transform 0.15s ease;
+        z-index: 30;
+      }
+
+      #tooltip.visible {
+        opacity: 1;
+        transform: translate(-50%, -100%) translateY(-16px);
+      }
+
+      .tooltip-title {
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin-bottom: 4px;
+      }
+
+      .tooltip-domain {
+        font-size: 11px;
+        font-weight: 600;
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .tooltip-metrics {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        padding: 8px 0;
+        border-top: 1px solid var(--border-color);
+        border-bottom: 1px solid var(--border-color);
+        margin-bottom: 8px;
+      }
+
+      .metric-box {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .metric-label {
+        font-size: 10px;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .metric-val {
+        font-size: 15px;
+        font-weight: 700;
+        color: var(--text-primary);
+      }
+
+      .tooltip-footer {
+        font-size: 10px;
+        color: var(--text-muted);
+      }
+
+      #drawer {
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        width: var(--drawer-width);
+        max-width: 100vw;
+        background: var(--bg-secondary);
+        border-left: 1px solid var(--border-color);
+        box-shadow: -10px 0 35px rgba(0, 0, 0, 0.6);
+        z-index: 40;
+        display: flex;
+        flex-direction: column;
+        transform: translateX(100%);
+        transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        user-select: text;
+      }
+
+      #drawer.open {
+        transform: translateX(0);
+      }
+
+      .drawer-header {
+        padding: 18px 22px;
+        border-bottom: 1px solid var(--border-color);
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 16px;
+        background: var(--bg-card);
+      }
+
+      .drawer-close {
+        width: 30px;
+        height: 30px;
+        border-radius: 6px;
+        border: 1px solid var(--border-color);
+        background: var(--bg-elevated);
+        color: var(--text-secondary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        font-size: 16px;
+        line-height: 1;
+        transition: all 0.15s;
+        flex-shrink: 0;
+      }
+
+      .drawer-close:hover {
+        background: var(--border-hover);
+        color: var(--text-primary);
+      }
+
+      .drawer-body {
+        padding: 22px;
+        overflow-y: auto;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+      }
+
+      .drawer-domain-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 6px;
+      }
+
+      .drawer-title {
+        font-size: 20px;
+        font-weight: 800;
+        color: var(--text-primary);
+        line-height: 1.3;
+        margin-bottom: 4px;
+      }
+
+      .drawer-category {
+        font-size: 13px;
+        color: var(--text-secondary);
+      }
+
+      .score-cards-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+
+      .score-card {
+        background: var(--bg-elevated);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        padding: 12px 14px;
+      }
+
+      .score-title {
+        font-size: 11px;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        margin-bottom: 4px;
+      }
+
+      .score-number {
+        font-size: 24px;
+        font-weight: 800;
+        color: var(--text-primary);
+        margin-bottom: 6px;
+      }
+
+      .score-bar-bg {
+        width: 100%;
+        height: 6px;
+        background: rgba(255, 255, 255, 0.08);
+        border-radius: 3px;
+        overflow: hidden;
+      }
+
+      .score-bar-fill {
+        height: 100%;
+        border-radius: 3px;
+      }
+
+      .section-block {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .section-header {
+        font-size: 12px;
+        font-weight: 700;
+        color: var(--text-secondary);
+        text-transform: uppercase;
+        letter-spacing: 0.6px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .bullet-list {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .bullet-item {
+        font-size: 13px;
+        line-height: 1.5;
+        color: var(--text-primary);
+        padding-left: 18px;
+        position: relative;
+      }
+
+      .bullet-item::before {
+        content: "";
+        position: absolute;
+        left: 4px;
+        top: 7px;
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--text-muted);
+      }
+
+      .bullet-pro::before { background: #10b981; }
+      .bullet-con::before { background: #f43f5e; }
+      .bullet-req::before { background: #0284c7; }
+
+      .shared-badge-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+      }
+
+      .shared-badge {
+        font-size: 11px;
+        padding: 4px 10px;
+        border-radius: 6px;
+        background: var(--bg-elevated);
+        border: 1px solid var(--border-color);
+        color: var(--text-primary);
+        cursor: pointer;
+        transition: all 0.15s;
+      }
+
+      .shared-badge:hover {
+        border-color: rgba(255, 255, 255, 0.3);
+      }
+
+      #toast {
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%) translateY(40px);
+        background: #0f172a;
+        color: #ffffff;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        padding: 8px 18px;
+        border-radius: 8px;
+        font-size: 12px;
+        font-weight: 600;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+        opacity: 0;
+        pointer-events: none;
+        transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        z-index: 100;
+      }
+
+      #toast.visible {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+      }
+
+      #backdrop {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(4px);
+        z-index: 35;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.25s ease;
+      }
+
+      #backdrop.visible {
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      .canvas-legend {
+        position: absolute;
+        bottom: 16px;
+        left: 16px;
+        background: var(--bg-card);
+        backdrop-filter: blur(12px);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        padding: 10px 14px;
+        font-size: 11px;
+        color: var(--text-secondary);
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        z-index: 10;
+        pointer-events: auto;
+      }
+
+      .legend-title {
+        font-weight: 700;
+        color: var(--text-primary);
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .legend-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .legend-circle-small {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        border: 1px solid rgba(255, 255, 255, 0.6);
+      }
+
+      .legend-circle-large {
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        border: 3px solid rgba(255, 255, 255, 0.9);
+      }
+
+      .zoom-controls {
+        position: absolute;
+        bottom: 16px;
+        right: 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        z-index: 10;
+      }
+
+      .zoom-btn {
+        width: 32px;
+        height: 32px;
+        border-radius: 6px;
+        border: 1px solid var(--border-color);
+        background: var(--bg-card);
+        backdrop-filter: blur(8px);
+        color: var(--text-primary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: 700;
+        transition: all 0.15s ease;
+      }
+
+      .zoom-btn:hover {
+        background: var(--border-hover);
+      }
+
+      @media (max-width: 900px) {
+        .header-stats { display: none; }
+        .toolbar { padding: 8px 12px; }
+        .search-input { width: 150px; }
+        .domain-filters { display: none; }
+        :root { --drawer-width: 100vw; }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Top Executive Header -->
+    <header>
+      <div class="brand-zone">
+        <div class="brand-logo-badge" title="Sistema Operativo Integrado The Company">SYS</div>
+        <div>
+          <div class="brand-title">The Company Operational Map</div>
+          <div class="brand-sub">Multi-Dimensional Strategic Initiative Chart</div>
+        </div>
+      </div>
+
+      <div class="header-stats">
+        <div class="stat-item">
+          <span>Total Initiatives:</span>
+          <span class="stat-val tabular-nums" id="stat-total">25</span>
+        </div>
+        <div class="stat-item">
+          <span>Macro-Domains:</span>
+          <span class="stat-val tabular-nums">5</span>
+        </div>
+        <div class="stat-item">
+          <span>Quick Wins:</span>
+          <span class="stat-val tabular-nums" id="stat-quick-wins" style="color: #10b981;">5</span>
+        </div>
+        <div class="stat-item">
+          <span>Avg Importance:</span>
+          <span class="stat-val tabular-nums" id="stat-avg-imp">87.3</span>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <button class="btn" id="btn-quick-wins" title="Filter high importance (>=85) and moderate complexity (<=55)">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+          Quick Wins
+        </button>
+        <button class="btn" id="btn-copy-code" title="Copy self-contained single HTML file for CodePen, JSFiddle, or GitHub Pages">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+          Copy Single HTML
+        </button>
+        <button class="btn" id="btn-download-html" title="Download standalone HTML file">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+          Export .html
+        </button>
+        <button class="btn" id="btn-theme" title="Toggle Light / Dark mode">
+          <svg id="theme-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Interactive Filter Toolbar -->
+    <div class="toolbar">
+      <div class="toolbar-left">
+        <div class="search-box">
+          <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+          <input type="text" id="search-input" class="search-input" placeholder="Search 25 initiatives..." />
+        </div>
+
+        <div class="domain-filters" id="domain-filters-container"></div>
+      </div>
+
+      <div class="toolbar-right">
+        <div class="segmented-control" id="view-mode-control">
+          <button class="segmented-btn active" data-mode="cluster">Cluster View</button>
+          <button class="segmented-btn" data-mode="matrix">Matrix (Imp vs Comp)</button>
+        </div>
+
+        <div class="slider-control" title="Filter minimum importance score">
+          <span>Min Imp: <strong id="lbl-min-imp" class="tabular-nums">75</strong></span>
+          <input type="range" id="slider-importance" min="75" max="96" value="75" />
+        </div>
+
+        <button class="btn" id="btn-reset-filters" style="font-size: 11px; padding: 4px 8px;">Reset</button>
+      </div>
+    </div>
+
+    <!-- Main Chart Canvas -->
+    <div id="chart-container">
+      <svg id="chart-svg"></svg>
+
+      <!-- Floating Tooltip -->
+      <div id="tooltip">
+        <div class="tooltip-title" id="tt-title">Initiative Title</div>
+        <div class="tooltip-domain" id="tt-domain">Domain</div>
+        <div class="tooltip-metrics">
+          <div class="metric-box">
+            <span class="metric-label">Importance</span>
+            <span class="metric-val tabular-nums" id="tt-imp" style="color: #38bdf8;">0</span>
+          </div>
+          <div class="metric-box">
+            <span class="metric-label">Complexity</span>
+            <span class="metric-val tabular-nums" id="tt-comp" style="color: #fb923c;">0</span>
+          </div>
+        </div>
+        <div class="tooltip-footer">Click node to inspect full dossier & connections</div>
+      </div>
+
+      <!-- Canvas Legend -->
+      <div class="canvas-legend">
+        <div class="legend-title">Visual Dimensions</div>
+        <div class="legend-row">
+          <div class="legend-circle-small"></div>
+          <span>Radius = Importance Score (20px - 72px)</span>
+        </div>
+        <div class="legend-row">
+          <div class="legend-circle-large"></div>
+          <span>Border Stroke = Complexity (1 - 100)</span>
+        </div>
+        <div class="legend-row">
+          <span style="display:inline-block; width:16px; height:2px; background:rgba(255,255,255,0.6); border-top:1px dashed #ffffff;"></span>
+          <span>Curved Arcs = Shared Cross-Domain Links</span>
+        </div>
+      </div>
+
+      <!-- Zoom Controls -->
+      <div class="zoom-controls">
+        <button class="zoom-btn" id="btn-zoom-in" title="Zoom in">+</button>
+        <button class="zoom-btn" id="btn-zoom-out" title="Zoom out">−</button>
+        <button class="zoom-btn" id="btn-zoom-reset" title="Reset view and fit">⟲</button>
+      </div>
+    </div>
+
+    <!-- Backdrop for Mobile Drawer -->
+    <div id="backdrop"></div>
+
+    <!-- Executive Detail Drawer -->
+    <aside id="drawer" aria-labelledby="drawer-title" aria-hidden="true">
+      <div class="drawer-header">
+        <div>
+          <div class="drawer-domain-tag" id="drawer-domain-tag">Domain</div>
+          <h2 class="drawer-title" id="drawer-title">Initiative Name</h2>
+          <div class="drawer-category" id="drawer-category">Category</div>
+        </div>
+        <button class="drawer-close" id="drawer-close" aria-label="Close dossier">✕</button>
+      </div>
+
+      <div class="drawer-body">
+        <div class="score-cards-grid">
+          <div class="score-card">
+            <div class="score-title">Importance Score</div>
+            <div class="score-number tabular-nums" id="drawer-imp-val">90</div>
+            <div class="score-bar-bg">
+              <div class="score-bar-fill" id="drawer-imp-bar" style="background: #0284c7; width: 90%;"></div>
+            </div>
+          </div>
+          <div class="score-card">
+            <div class="score-title">Complexity Score</div>
+            <div class="score-number tabular-nums" id="drawer-comp-val">65</div>
+            <div class="score-bar-bg">
+              <div class="score-bar-fill" id="drawer-comp-bar" style="background: #f59e0b; width: 65%;"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-block" id="drawer-assoc-block">
+          <div class="section-header">Shared Cross-Domain Associations</div>
+          <div class="shared-badge-list" id="drawer-assoc-list"></div>
+        </div>
+
+        <div class="section-block">
+          <div class="section-header" style="color: #10b981;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            Strategic Advantages (Pros)
+          </div>
+          <ul class="bullet-list" id="drawer-pros-list"></ul>
+        </div>
+
+        <div class="section-block">
+          <div class="section-header" style="color: #f43f5e;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+            Operational Risks & Hurdles (Cons)
+          </div>
+          <ul class="bullet-list" id="drawer-cons-list"></ul>
+        </div>
+
+        <div class="section-block">
+          <div class="section-header" style="color: #38bdf8;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+            Technical Prerequisites
+          </div>
+          <ul class="bullet-list" id="drawer-reqs-list"></ul>
+        </div>
+      </div>
+    </aside>
+
+    <div id="toast">Code copied to clipboard!</div>
+
+    <script>
+      (function () {
+        const DATA = {
+          graph_metadata: {
+            system: "SYS - Sistema Operativo Integrado The Company",
+            version: "2.4.0",
+            total_initiatives: 25,
+            macro_domains: 5,
+            generated_at: "2026-10-26T21:42:00Z"
+          },
+          parent_domains: [
+            {
+              id: "core_case_mgmt",
+              short_name: "Core Case Management",
+              importance_score: 92,
+              complexity_score: 75,
+              color: "#0284c7",
+              metadata: {
+                category: "Core Infrastructure",
+                description: "Foundational transactional layer for case management, priority queuing, audit logging, and data deduplication."
+              }
+            },
+            {
+              id: "ops_intelligence",
+              short_name: "Ops Intelligence",
+              importance_score: 88,
+              complexity_score: 62,
+              color: "#0d9488",
+              metadata: {
+                category: "Command & Control",
+                description: "Real-time visual monitoring systems, operational dashboards, status triaging, and auditor interfaces."
+              }
+            },
+            {
+              id: "process_automation",
+              short_name: "Process Automation",
+              importance_score: 86,
+              complexity_score: 55,
+              color: "#10b981",
+              metadata: {
+                category: "Workflow Governance",
+                description: "Automated SLA delay tracking, document verification triggers, process standardization, and RPA workflows."
+              }
+            },
+            {
+              id: "allied_network_ecosystem",
+              short_name: "Allied Network Ecosystem",
+              importance_score: 84,
+              complexity_score: 50,
+              color: "#f59e0b",
+              metadata: {
+                category: "Partner Enablement",
+                description: "External third-party provider integration, digital SOP guidance, secure messaging, micro-training, and scorecards."
+              }
+            },
+            {
+              id: "analytics_predictive_ai",
+              short_name: "Analytics & Predictive AI",
+              importance_score: 90,
+              complexity_score: 72,
+              color: "#8b5cf6",
+              metadata: {
+                category: "Advanced Intelligence",
+                description: "Cognitive operational analytics, root-cause anomaly detection, predictive SLA risk modeling, and embedded AI assistants."
+              }
+            }
+          ],
+          nodes: [
+            {
+              id: "idea_01_central_ops_hub",
+              short_name: "Centralized Ops Hub",
+              importance_score: 96,
+              complexity_score: 75,
+              parent_id: "ops_intelligence",
+              shared_associations: ["core_case_mgmt", "analytics_predictive_ai"],
+              metadata: {
+                category: "Operational Intelligence & Dashboarding",
+                pros: [
+                  "Consolidates disparate operational views into a single command dashboard",
+                  "Eliminates interface switching for active emergency dispatchers",
+                  "Dramatically improves situational awareness during emergency surges"
+                ],
+                cons: [
+                  "High backend data aggregation requirements across multiple service modules",
+                  "Risk of operational bottleneck if central server availability drops"
+                ],
+                requirements: [
+                  "Micro-frontend framework implementation",
+                  "High-throughput real-time data streaming pipeline (Apache Kafka or Redis Streams)",
+                  "Unified WebSocket API gateway"
+                ]
+              }
+            },
+            {
+              id: "idea_02_sla_delay_alerts",
+              short_name: "SLA Delay Alerts",
+              importance_score: 85,
+              complexity_score: 45,
+              parent_id: "process_automation",
+              shared_associations: ["ops_intelligence"],
+              metadata: {
+                category: "Process Automation & Monitoring",
+                pros: [
+                  "Proactively notifies supervisors before SLA breach limits are exceeded",
+                  "Reduces total patient waiting time during emergency responses"
+                ],
+                cons: [
+                  "Risk of alert fatigue if threshold triggers are uncalibrated",
+                  "Requires strict definition of SLA limits across diverse case types"
+                ],
+                requirements: [
+                  "Automated background cron evaluation engine",
+                  "Multi-channel push notification service (WebSockets, SMS, Email)",
+                  "Configurable SLA rule definition module"
+                ]
+              }
+            },
+            {
+              id: "idea_03_case_status_triage",
+              short_name: "Case Status Triage",
+              importance_score: 82,
+              complexity_score: 35,
+              parent_id: "ops_intelligence",
+              shared_associations: ["core_case_mgmt"],
+              metadata: {
+                category: "Operational Intelligence & Dashboarding",
+                pros: [
+                  "Provides immediate visual status clarity using intuitive visual indicators",
+                  "Allows dispatch operators to focus on critical yellow/red cases instantly"
+                ],
+                cons: [
+                  "Over-simplification of complex clinical scenarios into discrete color buckets"
+                ],
+                requirements: [
+                  "Dynamic visual UI component library",
+                  "Real-time state transition evaluator service"
+                ]
+              }
+            },
+            {
+              id: "idea_04_realtime_dashboard",
+              short_name: "Real-Time Dashboard",
+              importance_score: 89,
+              complexity_score: 65,
+              parent_id: "ops_intelligence",
+              shared_associations: ["analytics_predictive_ai"],
+              metadata: {
+                category: "Operational Intelligence & Dashboarding",
+                pros: [
+                  "Provides live metrics on pending, active, and closed emergency cases",
+                  "Empowers management to dynamically reallocate dispatch personnel"
+                ],
+                cons: [
+                  "Demands low-latency database queries and UI re-rendering optimization"
+                ],
+                requirements: [
+                  "In-memory caching layer (Redis)",
+                  "Real-time event subscription service",
+                  "Optimized frontend canvas rendering"
+                ]
+              }
+            },
+            {
+              id: "idea_05_allied_portal",
+              short_name: "Allied Network Portal",
+              importance_score: 91,
+              complexity_score: 65,
+              parent_id: "allied_network_ecosystem",
+              shared_associations: ["ops_intelligence"],
+              metadata: {
+                category: "Allied Network Integration",
+                pros: [
+                  "Provides third-party medical partners with direct access to SYS requirements",
+                  "Standardizes inbound information flow from allied networks"
+                ],
+                cons: [
+                  "Requires strict external access security controls and multi-tenancy rules",
+                  "User adoption dependency on external partner staff training"
+                ],
+                requirements: [
+                  "Secure multi-tenant web application portal",
+                  "OAuth2 / OpenID Connect partner authentication layer",
+                  "Granular role-based access control (RBAC)"
+                ]
+              }
+            },
+            {
+              id: "idea_06_process_standardization",
+              short_name: "Process Digitalization",
+              importance_score: 94,
+              complexity_score: 70,
+              parent_id: "process_automation",
+              shared_associations: ["allied_network_ecosystem"],
+              metadata: {
+                category: "Process Automation & Monitoring",
+                pros: [
+                  "Harmonizes operational behavior across regional branches and external allies",
+                  "Eliminates undocumented manual workarounds and rogue operating methods"
+                ],
+                cons: [
+                  "Requires high organizational change management effort",
+                  "Initial resistance from regional teams used to local procedures"
+                ],
+                requirements: [
+                  "BPMN process execution engine (e.g., Camunda)",
+                  "Standardized digital protocol repository",
+                  "Branch governance auditing framework"
+                ]
+              }
+            },
+            {
+              id: "idea_07_allied_sop_guide",
+              short_name: "Allied SOP Guide",
+              importance_score: 83,
+              complexity_score: 35,
+              parent_id: "allied_network_ecosystem",
+              shared_associations: ["process_automation"],
+              metadata: {
+                category: "Allied Network Integration",
+                pros: [
+                  "Offers dynamic step-by-step guidance for allied operators during case processing",
+                  "Reduces administrative error rates in external partner submissions"
+                ],
+                cons: [
+                  "Requires ongoing maintenance as operating procedures change"
+                ],
+                requirements: [
+                  "Interactive wizard UI builder",
+                  "CMS integration for SOP documentation updates"
+                ]
+              }
+            },
+            {
+              id: "idea_08_e2e_tracking",
+              short_name: "End-to-End Tracking",
+              importance_score: 95,
+              complexity_score: 70,
+              parent_id: "core_case_mgmt",
+              shared_associations: ["ops_intelligence", "allied_network_ecosystem"],
+              metadata: {
+                category: "Core Case Management",
+                pros: [
+                  "Establishes unbroken line-of-sight tracking from intake to closure",
+                  "Eliminates operational blind spots across transferred patient cases"
+                ],
+                cons: [
+                  "Demands persistent data syncing across disparate clinical touchpoints"
+                ],
+                requirements: [
+                  "HL7 / FHIR clinical interoperability standards support",
+                  "Centralized event bus tracing architecture",
+                  "State persistence manager"
+                ]
+              }
+            },
+            {
+              id: "idea_09_missing_data_alerts",
+              short_name: "Missing Data Alerts",
+              importance_score: 80,
+              complexity_score: 40,
+              parent_id: "process_automation",
+              shared_associations: ["allied_network_ecosystem"],
+              metadata: {
+                category: "Process Automation & Monitoring",
+                pros: [
+                  "Automatically detects missing documentation required for medical audits",
+                  "Shortens total case cycle times by resolving missing data early"
+                ],
+                cons: [
+                  "Can result in frequent partner alerts if form field rules are overly rigid"
+                ],
+                requirements: [
+                  "Dynamic JSON schema validation engine",
+                  "Automated messaging webhook triggers"
+                ]
+              }
+            },
+            {
+              id: "idea_10_bottleneck_kpis",
+              short_name: "Bottleneck KPIs",
+              importance_score: 88,
+              complexity_score: 55,
+              parent_id: "analytics_predictive_ai",
+              shared_associations: ["ops_intelligence"],
+              metadata: {
+                category: "Analytics & Quality Governance",
+                pros: [
+                  "Pinpoints specific operational queues causing major patient delays",
+                  "Provides objective data to guide process re-engineering investments"
+                ],
+                cons: [
+                  "Dependency on accurate user timestamp logging across all process steps"
+                ],
+                requirements: [
+                  "Data warehouse OLAP cube aggregation",
+                  "Automated ETL pipeline for event duration extraction",
+                  "BI visualization API integration"
+                ]
+              }
+            },
+            {
+              id: "idea_11_ai_root_cause_engine",
+              short_name: "AI Root-Cause Engine",
+              importance_score: 89,
+              complexity_score: 80,
+              parent_id: "analytics_predictive_ai",
+              shared_associations: ["process_automation"],
+              metadata: {
+                category: "Advanced AI & Predictive Analytics",
+                pros: [
+                  "Automatically uncovers recurring operational failures across historical records",
+                  "Identifies systemic issues human auditors overlook"
+                ],
+                cons: [
+                  "High computational cost and model training complexity",
+                  "Requires extensive clean historical data archives"
+                ],
+                requirements: [
+                  "Unsupervised machine learning pattern mining algorithms",
+                  "Python / PyTorch model serving microservice",
+                  "Historical log data repository"
+                ]
+              }
+            },
+            {
+              id: "idea_12_exec_reports",
+              short_name: "Executive Ops Reports",
+              importance_score: 81,
+              complexity_score: 45,
+              parent_id: "analytics_predictive_ai",
+              shared_associations: ["ops_intelligence"],
+              metadata: {
+                category: "Analytics & Quality Governance",
+                pros: [
+                  "Automates performance reporting for supervisors and management",
+                  "Saves manual report generation effort every operating cycle"
+                ],
+                cons: [
+                  "Static reports can lead to passive monitoring without actionable triggers"
+                ],
+                requirements: [
+                  "Scheduled PDF/HTML generation background service",
+                  "Email and messaging integration layer",
+                  "Configurable report template manager"
+                ]
+              }
+            },
+            {
+              id: "idea_13_priority_matrix",
+              short_name: "Dynamic Priority System",
+              importance_score: 90,
+              complexity_score: 50,
+              parent_id: "core_case_mgmt",
+              shared_associations: ["ops_intelligence"],
+              metadata: {
+                category: "Core Case Management",
+                pros: [
+                  "Ensures severe, life-threatening emergency cases bypass routine queues",
+                  "Dynamically escalates aging cases based on clinical urgency"
+                ],
+                cons: [
+                  "Requires strict consensus on clinical prioritization criteria"
+                ],
+                requirements: [
+                  "Priority score calculation engine",
+                  "Dynamic queue re-sorting algorithm",
+                  "Integration with dispatch management UI"
+                ]
+              }
+            },
+            {
+              id: "idea_14_allied_comms_channel",
+              short_name: "Secure Allied Chat",
+              importance_score: 84,
+              complexity_score: 50,
+              parent_id: "allied_network_ecosystem",
+              shared_associations: ["core_case_mgmt"],
+              metadata: {
+                category: "Allied Network Integration",
+                pros: [
+                  "Enables context-aware chat directly attached to active case files",
+                  "Eliminates unmonitored external messaging apps for case updates"
+                ],
+                cons: [
+                  "Requires content archiving to maintain medical regulatory compliance"
+                ],
+                requirements: [
+                  "WebRTC or WebSocket real-time messaging server",
+                  "End-to-end data encryption layer",
+                  "File and media attachment scanner service"
+                ]
+              }
+            },
+            {
+              id: "idea_15_allied_micro_training",
+              short_name: "Digital Micro-Training",
+              importance_score: 78,
+              complexity_score: 40,
+              parent_id: "allied_network_ecosystem",
+              shared_associations: ["process_automation"],
+              metadata: {
+                category: "Allied Network Integration",
+                pros: [
+                  "Accelerates onboarding for new allied network personnel",
+                  "Ensures consistent partner compliance with The Company protocols"
+                ],
+                cons: [
+                  "Requires initial media production and regular content updates"
+                ],
+                requirements: [
+                  "Embedded Learning Management System (LMS) module",
+                  "Interactive SCORM/xAPI video content player",
+                  "Completion tracking and certification API"
+                ]
+              }
+            },
+            {
+              id: "idea_16_smart_search",
+              short_name: "Enterprise Smart Search",
+              importance_score: 87,
+              complexity_score: 65,
+              parent_id: "analytics_predictive_ai",
+              shared_associations: ["core_case_mgmt"],
+              metadata: {
+                category: "Knowledge & Search Infrastructure",
+                pros: [
+                  "Provides instant indexed search across medical records, patients, and SOPs",
+                  "Reduces information lookup latency during active triage"
+                ],
+                cons: [
+                  "Requires real-time indexing and strict security rules to protect patient privacy"
+                ],
+                requirements: [
+                  "Elasticsearch / OpenSearch cluster integration",
+                  "Document transformation and indexing pipeline",
+                  "Attribute-Based Access Control (ABAC) search filter layer"
+                ]
+              }
+            },
+            {
+              id: "idea_17_operational_kb",
+              short_name: "Operational Knowledge Base",
+              importance_score: 79,
+              complexity_score: 35,
+              parent_id: "analytics_predictive_ai",
+              shared_associations: ["allied_network_ecosystem"],
+              metadata: {
+                category: "Knowledge & Search Infrastructure",
+                pros: [
+                  "Empowers staff and allied network operators to self-resolve routine queries",
+                  "Reduces administrative supervisory escalations"
+                ],
+                cons: [
+                  "Knowledge base content becomes obsolete without dedicated maintainers"
+                ],
+                requirements: [
+                  "Headless CMS for knowledge documentation",
+                  "Semantic document tagging taxonomy",
+                  "Feedback voting and article utility analytics"
+                ]
+              }
+            },
+            {
+              id: "idea_18_rpa_workflow",
+              short_name: "RPA Workflow Automation",
+              importance_score: 86,
+              complexity_score: 65,
+              parent_id: "process_automation",
+              shared_associations: ["core_case_mgmt"],
+              metadata: {
+                category: "Process Automation & Monitoring",
+                pros: [
+                  "Automates repetitive manual data re-entry between systems",
+                  "Frees dispatch operators to focus on emergency clinical tasks"
+                ],
+                cons: [
+                  "Robotic automation scripts require updates when external portals change UI layouts"
+                ],
+                requirements: [
+                  "Robotic Process Automation runner framework",
+                  "Headless browser orchestration service",
+                  "Exception handling and alert dispatch system"
+                ]
+              }
+            },
+            {
+              id: "idea_19_predictive_risk_alerts",
+              short_name: "Predictive Risk Alerts",
+              importance_score: 93,
+              complexity_score: 85,
+              parent_id: "analytics_predictive_ai",
+              shared_associations: ["process_automation", "ops_intelligence"],
+              metadata: {
+                category: "Advanced AI & Predictive Analytics",
+                pros: [
+                  "Forecasts potential SLA violations before they occur",
+                  "Enables pre-emptive dispatch interventions and dynamic resource adjustments"
+                ],
+                cons: [
+                  "High computational complexity and model calibration requirements",
+                  "Risk of operational disruption from false positive predictions"
+                ],
+                requirements: [
+                  "Predictive time-series model runtime engine",
+                  "Real-time streaming feature store (Feast)",
+                  "Event stream prediction consumer"
+                ]
+              }
+            },
+            {
+              id: "idea_20_audit_traceability",
+              short_name: "Complete Audit Trail",
+              importance_score: 88,
+              complexity_score: 60,
+              parent_id: "core_case_mgmt",
+              shared_associations: ["analytics_predictive_ai"],
+              metadata: {
+                category: "Core Case Management",
+                pros: [
+                  "Logs every user action, case edit, and status change",
+                  "Ensures full legal, clinical, and regulatory audit compliance"
+                ],
+                cons: [
+                  "Generates high log data volume requiring scalable write architectures"
+                ],
+                requirements: [
+                  "Immutable write-once log repository",
+                  "Distributed event logging framework (OpenTelemetry)",
+                  "Audit event querying interface"
+                ]
+              }
+            },
+            {
+              id: "idea_21_allied_scorecard",
+              short_name: "Allied Scorecard System",
+              importance_score: 86,
+              complexity_score: 60,
+              parent_id: "allied_network_ecosystem",
+              shared_associations: ["analytics_predictive_ai"],
+              metadata: {
+                category: "Analytics & Quality Governance",
+                pros: [
+                  "Evaluates partner performance using objective response and compliance metrics",
+                  "Improves provider service delivery through automated quality scoring"
+                ],
+                cons: [
+                  "Partner tension if scoring logic is perceived as rigid or unadjusted for local conditions"
+                ],
+                requirements: [
+                  "Automated provider rating calculation engine",
+                  "Partner performance metrics dashboard",
+                  "Monthly compliance reporting service"
+                ]
+              }
+            },
+            {
+              id: "idea_22_system_integration",
+              short_name: "System Integration Engine",
+              importance_score: 92,
+              complexity_score: 85,
+              parent_id: "core_case_mgmt",
+              shared_associations: ["process_automation", "allied_network_ecosystem"],
+              metadata: {
+                category: "Core Case Management",
+                pros: [
+                  "Eliminates duplicate data entry across distinct operational departments",
+                  "Harmonizes case master data across the entire organization"
+                ],
+                cons: [
+                  "Complex refactoring of legacy system interfaces",
+                  "Potential operational risk during data bus migration"
+                ],
+                requirements: [
+                  "Enterprise Master Data Management (MDM) architecture",
+                  "Centralized REST/gRPC API gateway layer",
+                  "Database schema harmonization"
+                ]
+              }
+            },
+            {
+              id: "idea_23_medical_auditor_desk",
+              short_name: "Medical Auditor Desk",
+              importance_score: 87,
+              complexity_score: 55,
+              parent_id: "ops_intelligence",
+              shared_associations: ["core_case_mgmt", "analytics_predictive_ai"],
+              metadata: {
+                category: "Operational Intelligence & Dashboarding",
+                pros: [
+                  "Accelerates clinical authorization decisions with a dedicated auditor UI",
+                  "Consolidates patient histories and medical charts into a single audit screen"
+                ],
+                cons: [
+                  "Requires strict role-based access security for sensitive patient health data"
+                ],
+                requirements: [
+                  "Role-tailored workspace interface",
+                  "Secure medical document inline viewer",
+                  "One-click audit decision execution workflow"
+                ]
+              }
+            },
+            {
+              id: "idea_24_incident_frequency_stats",
+              short_name: "Incident Frequency Stats",
+              importance_score: 85,
+              complexity_score: 50,
+              parent_id: "analytics_predictive_ai",
+              shared_associations: ["ops_intelligence"],
+              metadata: {
+                category: "Analytics & Quality Governance",
+                pros: [
+                  "Quantifies operational incident trends to target process enhancements",
+                  "Provides statistical evidence for medical protocol updates"
+                ],
+                cons: [
+                  "Relies on clean, standardized incident categorization during case entry"
+                ],
+                requirements: [
+                  "Statistical aggregation pipeline",
+                  "Time-series database store (TimescaleDB or InfluxDB)",
+                  "Dynamic charting UI layer"
+                ]
+              }
+            },
+            {
+              id: "idea_25_sys_ai_assistant",
+              short_name: "SYS AI Assistant",
+              importance_score: 94,
+              complexity_score: 90,
+              parent_id: "analytics_predictive_ai",
+              shared_associations: ["core_case_mgmt", "allied_network_ecosystem"],
+              metadata: {
+                category: "Advanced AI & Predictive Analytics",
+                pros: [
+                  "Provides interactive contextual guidance on correct operating procedures inside SYS",
+                  "Dramatically reduces operator error rates during complex medical dispatch triage"
+                ],
+                cons: [
+                  "Requires model fine-tuning and safety guardrails against AI hallucinations",
+                  "High deployment effort and clinical review validation requirements"
+                ],
+                requirements: [
+                  "Retrieval-Augmented Generation (RAG) architecture",
+                  "Domain-tuned LLM inference pipeline",
+                  "Embedded conversational UI widget inside SYS core frontend"
+                ]
+              }
+            }
+          ]
+        };
+
+        const domainMap = {};
+        DATA.parent_domains.forEach(d => { domainMap[d.id] = d; });
+
+        const state = {
+          selectedDomains: new Set(DATA.parent_domains.map(d => d.id)),
+          searchQuery: "",
+          minImportance: 75,
+          quickWinsOnly: false,
+          activeNodeId: null,
+          hoveredNodeId: null,
+          viewMode: "cluster",
+          isDarkTheme: true
+        };
+
+        const impExtent = d3.extent(DATA.nodes, d => d.importance_score);
+        const radiusScale = d3.scaleSqrt()
+          .domain([impExtent[0] || 75, impExtent[1] || 100])
+          .range([22, 68]);
+
+        DATA.nodes.forEach(n => {
+          n.radius = radiusScale(n.importance_score);
+        });
+
+        const container = document.getElementById("chart-container");
+        const svg = d3.select("#chart-svg");
+        const tooltip = document.getElementById("tooltip");
+        const drawer = document.getElementById("drawer");
+        const backdrop = document.getElementById("backdrop");
+        const toast = document.getElementById("toast");
+
+        let width = container.clientWidth || 1200;
+        let height = container.clientHeight || 750;
+
+        const gMain = svg.append("g").attr("class", "main-viewport");
+        const gBackground = gMain.append("g").attr("class", "background-layer");
+        const gLinks = gMain.append("g").attr("class", "links-layer");
+        const gNodes = gMain.append("g").attr("class", "nodes-layer");
+
+        const defs = svg.append("defs");
+        const filter = defs.append("filter")
+          .attr("id", "bubble-glow")
+          .attr("x", "-50%").attr("y", "-50%")
+          .attr("width", "200%").attr("height", "200%");
+        filter.append("feGaussianBlur").attr("stdDeviation", "8").attr("result", "blur");
+        filter.append("feMerge")
+          .selectAll("feMergeNode")
+          .data(["blur", "SourceGraphic"])
+          .enter().append("feMergeNode").attr("in", d => d);
+
+        const zoom = d3.zoom()
+          .scaleExtent([0.35, 3.5])
+          .on("zoom", (event) => { gMain.attr("transform", event.transform); });
+
+        svg.call(zoom).on("dblclick.zoom", null);
+
+        function computeDomainCentroids(w, h) {
+          const cx = w / 2;
+          const cy = h / 2;
+          const r = Math.min(w, h) * 0.32;
+          const centroids = {};
+          const domainIds = DATA.parent_domains.map(d => d.id);
+          domainIds.forEach((id, i) => {
+            const angle = (i * 2 * Math.PI) / domainIds.length - Math.PI / 2;
+            centroids[id] = {
+              x: cx + r * Math.cos(angle),
+              y: cy + r * Math.sin(angle)
+            };
+          });
+          return centroids;
+        }
+
+        let domainCentroids = computeDomainCentroids(width, height);
+
+        const simulation = d3.forceSimulation(DATA.nodes)
+          .force("center", d3.forceCenter(width / 2, height / 2).strength(0.04))
+          .force("collide", d3.forceCollide(d => d.radius + 6).strength(0.9))
+          .force("x", d3.forceX(d => {
+            if (state.viewMode === "matrix") {
+              const xPadding = 120;
+              return xPadding + (d.complexity_score / 100) * (width - xPadding * 2);
+            }
+            return domainCentroids[d.parent_id]?.x || width / 2;
+          }).strength(d => state.viewMode === "matrix" ? 0.8 : 0.35))
+          .force("y", d3.forceY(d => {
+            if (state.viewMode === "matrix") {
+              const yPadding = 100;
+              const norm = (d.importance_score - 75) / (100 - 75);
+              return height - yPadding - norm * (height - yPadding * 2);
+            }
+            return domainCentroids[d.parent_id]?.y || height / 2;
+          }).strength(d => state.viewMode === "matrix" ? 0.8 : 0.35))
+          .force("charge", d3.forceManyBody().strength(-20))
+          .alphaDecay(0.022);
+
+        function dragstarted(event, d) {
+          if (!event.active) simulation.alphaTarget(0.3).restart();
+          d.fx = d.x; d.fy = d.y;
+        }
+        function dragged(event, d) {
+          d.fx = event.x; d.fy = event.y;
+        }
+        function dragended(event, d) {
+          if (!event.active) simulation.alphaTarget(0);
+          d.fx = null; d.fy = null;
+        }
+
+        function renderBackground() {
+          gBackground.selectAll("*").remove();
+
+          if (state.viewMode === "cluster") {
+            const pods = gBackground.selectAll(".domain-pod")
+              .data(DATA.parent_domains)
+              .enter().append("g").attr("class", "domain-pod");
+
+            pods.append("circle")
+              .attr("cx", d => domainCentroids[d.id]?.x || 0)
+              .attr("cy", d => domainCentroids[d.id]?.y || 0)
+              .attr("r", Math.min(width, height) * 0.22)
+              .attr("fill", d => d.color)
+              .attr("fill-opacity", 0.04)
+              .attr("stroke", d => d.color)
+              .attr("stroke-opacity", 0.18)
+              .attr("stroke-dasharray", "4 4")
+              .attr("stroke-width", 1.5);
+
+            pods.append("text")
+              .attr("class", "domain-centroid-label")
+              .attr("x", d => domainCentroids[d.id]?.x || 0)
+              .attr("y", d => (domainCentroids[d.id]?.y || 0) - Math.min(width, height) * 0.22 - 12)
+              .text(d => d.short_name);
+          } else if (state.viewMode === "matrix") {
+            const xPadding = 120;
+            const yPadding = 100;
+            const grid = gBackground.append("g").attr("class", "matrix-grid");
+            const midX = width / 2;
+            const midY = height / 2;
+
+            grid.append("line")
+              .attr("x1", xPadding).attr("x2", width - xPadding)
+              .attr("y1", midY).attr("y2", midY)
+              .attr("stroke", "rgba(255,255,255,0.12)")
+              .attr("stroke-dasharray", "3 3");
+
+            grid.append("line")
+              .attr("x1", midX).attr("x2", midX)
+              .attr("y1", yPadding).attr("y2", height - yPadding)
+              .attr("stroke", "rgba(255,255,255,0.12)")
+              .attr("stroke-dasharray", "3 3");
+
+            const qLabels = [
+              { text: "QUICK WINS (High Impact, Low Effort)", x: xPadding + 30, y: yPadding + 20, color: "#10b981" },
+              { text: "STRATEGIC BETS (High Impact, High Effort)", x: width - xPadding - 240, y: yPadding + 20, color: "#8b5cf6" },
+              { text: "TACTICAL / INCREMENTAL", x: xPadding + 30, y: height - yPadding - 16, color: "#94a3b8" },
+              { text: "RE-EVALUATE / DE-PRIORITIZE", x: width - xPadding - 220, y: height - yPadding - 16, color: "#f43f5e" }
+            ];
+
+            qLabels.forEach(q => {
+              grid.append("text")
+                .attr("x", q.x).attr("y", q.y)
+                .attr("fill", q.color)
+                .attr("font-size", "11px")
+                .attr("font-weight", "700")
+                .attr("letter-spacing", "0.5px")
+                .text(q.text);
+            });
+
+            grid.append("text")
+              .attr("x", width / 2).attr("y", height - yPadding + 35)
+              .attr("text-anchor", "middle")
+              .attr("fill", "var(--text-secondary)")
+              .attr("font-size", "12px").attr("font-weight", "600")
+              .text("Complexity Score (1 → 100) →");
+
+            grid.append("text")
+              .attr("transform", "rotate(-90)")
+              .attr("x", -height / 2).attr("y", xPadding - 35)
+              .attr("text-anchor", "middle")
+              .attr("fill", "var(--text-secondary)")
+              .attr("font-size", "12px").attr("font-weight", "600")
+              .text("Importance Score (75 → 100) →");
+          }
+        }
+
+        function updateLinks() {
+          const linksData = [];
+          const activeOrHovered = state.hoveredNodeId || state.activeNodeId;
+
+          if (activeOrHovered) {
+            const targetNode = DATA.nodes.find(n => n.id === activeOrHovered);
+            if (targetNode && Array.isArray(targetNode.shared_associations)) {
+              targetNode.shared_associations.forEach(assocId => {
+                const targetCentroid = domainCentroids[assocId];
+                if (targetCentroid) {
+                  linksData.push({
+                    sourceNode: targetNode,
+                    targetCentroid: targetCentroid,
+                    domainId: assocId
+                  });
+                }
+              });
+            }
+          }
+
+          const linkSelection = gLinks.selectAll(".assoc-link")
+            .data(linksData, d => `${d.sourceNode.id}->${d.domainId}`);
+
+          linkSelection.exit().remove();
+
+          const enterLinks = linkSelection.enter().append("path").attr("class", "assoc-link");
+
+          enterLinks.merge(linkSelection)
+            .attr("stroke", d => domainMap[d.domainId]?.color || "#ffffff")
+            .attr("stroke-width", 2.5)
+            .attr("stroke-opacity", 0.75)
+            .attr("d", d => {
+              const sx = d.sourceNode.x;
+              const sy = d.sourceNode.y;
+              const tx = d.targetCentroid.x;
+              const ty = d.targetCentroid.y;
+              const dx = tx - sx;
+              const dy = ty - sy;
+              const cx = (sx + tx) / 2 - dy * 0.2;
+              const cy = (sy + ty) / 2 + dx * 0.2;
+              return `M${sx},${sy} Q${cx},${cy} ${tx},${ty}`;
+            });
+        }
+
+        let nodeElements = null;
+
+        function renderNodes() {
+          nodeElements = gNodes.selectAll(".bubble-node")
+            .data(DATA.nodes, d => d.id)
+            .join(enter => {
+              const g = enter.append("g")
+                .attr("class", "bubble-node")
+                .call(d3.drag()
+                  .on("start", dragstarted)
+                  .on("drag", dragged)
+                  .on("end", dragended))
+                .on("mouseenter", (event, d) => onNodeHover(event, d))
+                .on("mousemove", (event, d) => onNodeMove(event, d))
+                .on("mouseleave", (event, d) => onNodeLeave(event, d))
+                .on("click", (event, d) => onNodeClick(event, d));
+
+              g.append("circle")
+                .attr("class", "outer-ring")
+                .attr("r", d => d.radius)
+                .attr("fill", d => domainMap[d.parent_id]?.color || "#0284c7")
+                .attr("fill-opacity", 0.82)
+                .attr("stroke", d => domainMap[d.parent_id]?.color || "#ffffff")
+                .attr("stroke-width", d => 2 + (d.complexity_score / 100) * 4.5)
+                .attr("stroke-opacity", d => 0.5 + (d.complexity_score / 100) * 0.5);
+
+              g.append("circle")
+                .attr("class", "inner-ring")
+                .attr("r", d => Math.max(0, d.radius - 3.5))
+                .attr("fill", "none")
+                .attr("stroke", "rgba(255, 255, 255, 0.25)")
+                .attr("stroke-width", 1);
+
+              g.append("text").attr("class", "node-label").attr("y", -3);
+
+              g.append("text")
+                .attr("class", "node-sub")
+                .attr("y", d => Math.min(18, d.radius * 0.42))
+                .text(d => `★${d.importance_score} · c${d.complexity_score}`);
+
+              return g;
+            });
+
+          nodeElements.each(function (d) {
+            const el = d3.select(this).select(".node-label");
+            el.selectAll("tspan").remove();
+            const words = d.short_name.split(/\s+/);
+            const radius = d.radius;
+            const fontSize = radius > 55 ? 12 : (radius > 40 ? 10.5 : 9);
+            el.style("font-size", `${fontSize}px`);
+
+            if (words.length <= 2 || radius < 34) {
+              if (words.length > 2) {
+                el.append("tspan").attr("x", 0).attr("dy", "-0.2em").text(words.slice(0, 2).join(" "));
+                el.append("tspan").attr("x", 0).attr("dy", "1.15em").text(words.slice(2).join(" "));
+              } else {
+                el.append("tspan").attr("x", 0).attr("dy", "0.3em").text(d.short_name);
+              }
+            } else {
+              const mid = Math.ceil(words.length / 2);
+              el.append("tspan").attr("x", 0).attr("dy", "-0.35em").text(words.slice(0, mid).join(" "));
+              el.append("tspan").attr("x", 0).attr("dy", "1.15em").text(words.slice(mid).join(" "));
+            }
+          });
+
+          applyFiltering();
+        }
+
+        function applyFiltering() {
+          if (!nodeElements) return;
+          const q = state.searchQuery.trim().toLowerCase();
+          let matchCount = 0;
+
+          nodeElements.each(function (d) {
+            const isDomainActive = state.selectedDomains.has(d.parent_id);
+            const isImpActive = d.importance_score >= state.minImportance;
+            const isQuickWinNode = d.importance_score >= 85 && d.complexity_score <= 55;
+            const matchesQuickWin = !state.quickWinsOnly || isQuickWinNode;
+
+            let matchesSearch = true;
+            if (q) {
+              const inTitle = d.short_name.toLowerCase().includes(q);
+              const inCategory = d.metadata.category.toLowerCase().includes(q);
+              const inPros = d.metadata.pros.some(p => p.toLowerCase().includes(q));
+              const inCons = d.metadata.cons.some(c => c.toLowerCase().includes(q));
+              const inReqs = d.metadata.requirements.some(r => r.toLowerCase().includes(q));
+              matchesSearch = inTitle || inCategory || inPros || inCons || inReqs;
+            }
+
+            const isVisible = isDomainActive && isImpActive && matchesQuickWin && matchesSearch;
+            if (isVisible) matchCount++;
+
+            const el = d3.select(this);
+
+            if (!isVisible) {
+              el.style("opacity", 0.08).style("pointer-events", "none");
+            } else {
+              const activeId = state.hoveredNodeId || state.activeNodeId;
+              if (activeId) {
+                const activeNode = DATA.nodes.find(n => n.id === activeId);
+                const isSelf = d.id === activeId;
+                const isSharedMatch = activeNode?.shared_associations?.includes(d.parent_id) ||
+                  d.shared_associations?.includes(activeNode?.parent_id);
+                const isSameParent = activeNode?.parent_id === d.parent_id;
+
+                if (isSelf) {
+                  el.style("opacity", 1).attr("filter", "url(#bubble-glow)");
+                } else if (isSharedMatch || isSameParent) {
+                  el.style("opacity", 0.95).attr("filter", null);
+                } else {
+                  el.style("opacity", 0.18).attr("filter", null);
+                }
+              } else {
+                el.style("opacity", 1).style("pointer-events", "auto").attr("filter", null);
+              }
+            }
+          });
+
+          const totalStat = document.getElementById("stat-total");
+          if (totalStat) totalStat.textContent = `${matchCount} / 25`;
+        }
+
+        simulation.on("tick", () => {
+          if (nodeElements) {
+            nodeElements.attr("transform", d => `translate(${d.x},${d.y})`);
+          }
+          updateLinks();
+        });
+
+        function onNodeHover(event, d) {
+          state.hoveredNodeId = d.id;
+          applyFiltering();
+          updateLinks();
+
+          const domain = domainMap[d.parent_id];
+          document.getElementById("tt-title").textContent = d.short_name;
+          document.getElementById("tt-domain").innerHTML = `
+            <span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:${domain?.color || '#0284c7'};"></span>
+            ${domain?.short_name || d.parent_id}
+          `;
+          document.getElementById("tt-imp").textContent = d.importance_score;
+          document.getElementById("tt-comp").textContent = d.complexity_score;
+
+          tooltip.classList.add("visible");
+          positionTooltip(event);
+        }
+
+        function onNodeMove(event) {
+          positionTooltip(event);
+        }
+
+        function positionTooltip(event) {
+          const rect = container.getBoundingClientRect();
+          const x = event.clientX - rect.left;
+          const y = event.clientY - rect.top;
+          tooltip.style.left = `${x}px`;
+          tooltip.style.top = `${y}px`;
+        }
+
+        function onNodeLeave() {
+          state.hoveredNodeId = null;
+          tooltip.classList.remove("visible");
+          applyFiltering();
+          updateLinks();
+        }
+
+        function onNodeClick(event, d) {
+          event.stopPropagation();
+          state.activeNodeId = d.id;
+          openDrawer(d);
+          applyFiltering();
+          updateLinks();
+        }
+
+        function openDrawer(d) {
+          const domain = domainMap[d.parent_id];
+
+          const tag = document.getElementById("drawer-domain-tag");
+          tag.innerHTML = `
+            <span style="display:inline-block; width:9px; height:9px; border-radius:50%; background:${domain?.color};"></span>
+            ${domain?.short_name || d.parent_id}
+          `;
+          tag.style.color = domain?.color || "var(--text-secondary)";
+
+          document.getElementById("drawer-title").textContent = d.short_name;
+          document.getElementById("drawer-category").textContent = d.metadata.category;
+
+          document.getElementById("drawer-imp-val").textContent = d.importance_score;
+          const impBar = document.getElementById("drawer-imp-bar");
+          impBar.style.width = `${d.importance_score}%`;
+          impBar.style.background = domain?.color || "#0284c7";
+
+          document.getElementById("drawer-comp-val").textContent = d.complexity_score;
+          const compBar = document.getElementById("drawer-comp-bar");
+          compBar.style.width = `${d.complexity_score}%`;
+          compBar.style.background = d.complexity_score > 70 ? "#ef4444" : (d.complexity_score > 50 ? "#f59e0b" : "#10b981");
+
+          const assocList = document.getElementById("drawer-assoc-list");
+          assocList.innerHTML = "";
+          if (Array.isArray(d.shared_associations) && d.shared_associations.length > 0) {
+            document.getElementById("drawer-assoc-block").style.display = "flex";
+            d.shared_associations.forEach(assocId => {
+              const assocDomain = domainMap[assocId];
+              const badge = document.createElement("div");
+              badge.className = "shared-badge";
+              badge.innerHTML = `
+                <span style="display:inline-block; width:7px; height:7px; border-radius:50%; background:${assocDomain?.color || '#ffffff'}; margin-right:5px;"></span>
+                ${assocDomain?.short_name || assocId}
+              `;
+              badge.onclick = () => {
+                state.selectedDomains.clear();
+                state.selectedDomains.add(assocId);
+                updateDomainChipButtons();
+                applyFiltering();
+              };
+              assocList.appendChild(badge);
+            });
+          } else {
+            document.getElementById("drawer-assoc-block").style.display = "none";
+          }
+
+          const prosList = document.getElementById("drawer-pros-list");
+          prosList.innerHTML = "";
+          d.metadata.pros.forEach(pro => {
+            const li = document.createElement("li");
+            li.className = "bullet-item bullet-pro";
+            li.textContent = pro;
+            prosList.appendChild(li);
+          });
+
+          const consList = document.getElementById("drawer-cons-list");
+          consList.innerHTML = "";
+          d.metadata.cons.forEach(con => {
+            const li = document.createElement("li");
+            li.className = "bullet-item bullet-con";
+            li.textContent = con;
+            consList.appendChild(li);
+          });
+
+          const reqsList = document.getElementById("drawer-reqs-list");
+          reqsList.innerHTML = "";
+          d.metadata.requirements.forEach(req => {
+            const li = document.createElement("li");
+            li.className = "bullet-item bullet-req";
+            li.textContent = req;
+            reqsList.appendChild(li);
+          });
+
+          drawer.classList.add("open");
+          drawer.setAttribute("aria-hidden", "false");
+          backdrop.classList.add("visible");
+        }
+
+        function closeDrawer() {
+          drawer.classList.remove("open");
+          drawer.setAttribute("aria-hidden", "true");
+          backdrop.classList.remove("visible");
+          state.activeNodeId = null;
+          applyFiltering();
+          updateLinks();
+        }
+
+        document.getElementById("drawer-close").onclick = closeDrawer;
+        backdrop.onclick = closeDrawer;
+
+        window.addEventListener("keydown", (e) => {
+          if (e.key === "Escape") closeDrawer();
+        });
+
+        const domainFiltersContainer = document.getElementById("domain-filters-container");
+
+        function setupDomainChips() {
+          domainFiltersContainer.innerHTML = "";
+          DATA.parent_domains.forEach(d => {
+            const btn = document.createElement("button");
+            btn.className = "domain-chip active";
+            btn.dataset.domainId = d.id;
+            btn.innerHTML = `<span class="dot" style="background: ${d.color};"></span>${d.short_name}`;
+            btn.onclick = () => {
+              if (state.selectedDomains.has(d.id)) {
+                if (state.selectedDomains.size > 1) {
+                  state.selectedDomains.delete(d.id);
+                } else {
+                  state.selectedDomains = new Set(DATA.parent_domains.map(p => p.id));
+                }
+              } else {
+                state.selectedDomains.add(d.id);
+              }
+              updateDomainChipButtons();
+              applyFiltering();
+            };
+            domainFiltersContainer.appendChild(btn);
+          });
+        }
+
+        function updateDomainChipButtons() {
+          const chips = domainFiltersContainer.querySelectorAll(".domain-chip");
+          chips.forEach(chip => {
+            const id = chip.dataset.domainId;
+            chip.className = state.selectedDomains.has(id) ? "domain-chip active" : "domain-chip inactive";
+          });
+        }
+
+        setupDomainChips();
+
+        const searchInput = document.getElementById("search-input");
+        searchInput.addEventListener("input", (e) => {
+          state.searchQuery = e.target.value;
+          applyFiltering();
+        });
+
+        const btnQuickWins = document.getElementById("btn-quick-wins");
+        btnQuickWins.addEventListener("click", () => {
+          state.quickWinsOnly = !state.quickWinsOnly;
+          btnQuickWins.classList.toggle("btn-active", state.quickWinsOnly);
+          applyFiltering();
+        });
+
+        const sliderImp = document.getElementById("slider-importance");
+        const lblMinImp = document.getElementById("lbl-min-imp");
+        sliderImp.addEventListener("input", (e) => {
+          state.minImportance = Number(e.target.value);
+          lblMinImp.textContent = state.minImportance;
+          applyFiltering();
+        });
+
+        const viewModeBtns = document.querySelectorAll("#view-mode-control .segmented-btn");
+        viewModeBtns.forEach(btn => {
+          btn.addEventListener("click", () => {
+            viewModeBtns.forEach(b => b.classList.remove("active"));
+            btn.classList.add("active");
+            state.viewMode = btn.dataset.mode;
+            renderBackground();
+
+            if (state.viewMode === "matrix") {
+              simulation.force("collide").strength(0.65);
+              simulation.force("x").strength(0.85);
+              simulation.force("y").strength(0.85);
+            } else {
+              simulation.force("collide").strength(0.9);
+              simulation.force("x").strength(0.35);
+              simulation.force("y").strength(0.35);
+            }
+            simulation.alpha(0.6).restart();
+          });
+        });
+
+        document.getElementById("btn-reset-filters").addEventListener("click", () => {
+          state.selectedDomains = new Set(DATA.parent_domains.map(d => d.id));
+          state.searchQuery = "";
+          searchInput.value = "";
+          state.quickWinsOnly = false;
+          btnQuickWins.classList.remove("btn-active");
+          state.minImportance = 75;
+          sliderImp.value = 75;
+          lblMinImp.textContent = "75";
+          updateDomainChipButtons();
+          applyFiltering();
+          resetZoom();
+        });
+
+        function resetZoom() {
+          svg.transition().duration(600).call(
+            zoom.transform,
+            d3.zoomIdentity.translate(0, 0).scale(1)
+          );
+        }
+
+        document.getElementById("btn-zoom-in").onclick = () => {
+          svg.transition().duration(250).call(zoom.scaleBy, 1.3);
+        };
+        document.getElementById("btn-zoom-out").onclick = () => {
+          svg.transition().duration(250).call(zoom.scaleBy, 0.77);
+        };
+        document.getElementById("btn-zoom-reset").onclick = resetZoom;
+
+        function showToast(msg) {
+          toast.textContent = msg;
+          toast.classList.add("visible");
+          setTimeout(() => { toast.classList.remove("visible"); }, 3000);
+        }
+
+        document.getElementById("btn-copy-code").addEventListener("click", () => {
+          const fullHtml = "<!doctype html>\n" + document.documentElement.outerHTML;
+          navigator.clipboard.writeText(fullHtml).then(() => {
+            showToast("Entire single HTML file copied to clipboard!");
+          }).catch(() => {
+            showToast("Copied to clipboard!");
+          });
+        });
+
+        document.getElementById("btn-download-html").addEventListener("click", () => {
+          const fullHtml = "<!doctype html>\n" + document.documentElement.outerHTML;
+          const blob = new Blob([fullHtml], { type: "text/html" });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = "sys_operational_bubble_chart.html";
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          URL.revokeObjectURL(url);
+          showToast("Downloaded sys_operational_bubble_chart.html!");
+        });
+
+        const btnTheme = document.getElementById("btn-theme");
+        btnTheme.addEventListener("click", () => {
+          state.isDarkTheme = !state.isDarkTheme;
+          if (state.isDarkTheme) {
+            document.documentElement.removeAttribute("data-theme");
+          } else {
+            document.documentElement.setAttribute("data-theme", "light");
+          }
+        });
+
+        function handleResize() {
+          width = container.clientWidth || 1200;
+          height = container.clientHeight || 750;
+          domainCentroids = computeDomainCentroids(width, height);
+          simulation.force("center", d3.forceCenter(width / 2, height / 2));
+          simulation.alpha(0.3).restart();
+          renderBackground();
+        }
+
+        window.addEventListener("resize", handleResize);
+
+        renderBackground();
+        renderNodes();
+
+        svg.on("click", (e) => {
+          if (e.target.tagName === "svg" || e.target.classList.contains("background-layer")) {
+            closeDrawer();
+          }
+        });
+
+        const avgImp = (DATA.nodes.reduce((acc, n) => acc + n.importance_score, 0) / DATA.nodes.length).toFixed(1);
+        const quickWinsCount = DATA.nodes.filter(n => n.importance_score >= 85 && n.complexity_score <= 55).length;
+        document.getElementById("stat-avg-imp").textContent = avgImp;
+        document.getElementById("stat-quick-wins").textContent = quickWinsCount;
+      })();
+    </script>
+  </body>
+</html>

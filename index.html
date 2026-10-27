@@ -1,12 +1,12 @@
 <!doctype html>
-<html lang="en">
+<html lang="es">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>SYS Operational Bubble Chart - The Company</title>
-    <meta name="description" content="Interactive multi-dimensional bubble chart visualizing 25 operational improvement initiatives across 5 macro-domains for SYS The Company." />
-    <meta property="og:title" content="SYS Operational Bubble Chart" />
-    <meta property="og:description" content="Interactive multi-dimensional bubble chart visualizing 25 operational improvement initiatives across 5 macro-domains for SYS The Company." />
+    <title>Mapa Operativo SOIV - Venemergencia</title>
+    <meta name="description" content="Visualización interactiva multidimensional de 25 iniciativas estratégicas operativas en 5 macrodominios para SOIV Venemergencia." />
+    <meta property="og:title" content="Mapa Operativo SOIV - Venemergencia" />
+    <meta property="og:description" content="Visualización interactiva multidimensional de 25 iniciativas estratégicas operativas en 5 macrodominios para SOIV Venemergencia." />
     <meta property="og:type" content="website" />
     <meta name="twitter:card" content="summary_large_image" />
 
@@ -17,19 +17,19 @@
       :root {
         --bg-primary: #0a0f1d;
         --bg-secondary: #111827;
-        --bg-card: rgba(17, 24, 39, 0.85);
+        --bg-card: rgba(17, 24, 39, 0.88);
         --bg-elevated: #1f293d;
         --text-primary: #f8fafc;
         --text-secondary: #94a3b8;
         --text-muted: #64748b;
         --border-color: rgba(255, 255, 255, 0.08);
-        --border-hover: rgba(255, 255, 255, 0.2);
+        --border-hover: rgba(255, 255, 255, 0.22);
         --accent-core: #0284c7;
         --accent-ops: #0d9488;
         --accent-process: #10b981;
         --accent-allied: #f59e0b;
         --accent-ai: #8b5cf6;
-        --drawer-width: 440px;
+        --drawer-width: 460px;
         --font-stack: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
       }
 
@@ -41,8 +41,8 @@
         --text-primary: #0f172a;
         --text-secondary: #475569;
         --text-muted: #94a3b8;
-        --border-color: rgba(0, 0, 0, 0.08);
-        --border-hover: rgba(0, 0, 0, 0.2);
+        --border-color: rgba(0, 0, 0, 0.09);
+        --border-hover: rgba(0, 0, 0, 0.22);
       }
 
       * {
@@ -64,12 +64,10 @@
         -webkit-font-smoothing: antialiased;
       }
 
-      /* Tabular figures for data integrity */
       .tabular-nums {
         font-variant-numeric: tabular-nums;
       }
 
-      /* Header Bar */
       header {
         display: flex;
         align-items: center;
@@ -89,18 +87,18 @@
       }
 
       .brand-logo-badge {
-        width: 34px;
-        height: 34px;
+        width: 36px;
+        height: 36px;
         border-radius: 8px;
         background: linear-gradient(135deg, #0284c7, #8b5cf6);
         display: flex;
         align-items: center;
         justify-content: center;
         font-weight: 800;
-        font-size: 14px;
+        font-size: 13px;
         color: #ffffff;
         letter-spacing: 0.5px;
-        box-shadow: 0 2px 8px rgba(2, 132, 199, 0.35);
+        box-shadow: 0 2px 10px rgba(2, 132, 199, 0.4);
       }
 
       .brand-title {
@@ -169,17 +167,12 @@
         border-color: #0284c7;
       }
 
-      .btn-primary:hover {
-        background: #0369a1;
-      }
-
       .btn-active {
         background: #10b981 !important;
         color: #ffffff !important;
         border-color: #059669 !important;
       }
 
-      /* Control Toolbar */
       .toolbar {
         display: flex;
         align-items: center;
@@ -195,7 +188,7 @@
       }
 
       [data-theme="light"] .toolbar {
-        background: rgba(255, 255, 255, 0.85);
+        background: rgba(255, 255, 255, 0.88);
       }
 
       .toolbar-left, .toolbar-right {
@@ -205,7 +198,6 @@
         flex-wrap: wrap;
       }
 
-      /* Search Box */
       .search-box {
         position: relative;
         display: flex;
@@ -220,13 +212,13 @@
         padding: 6px 12px 6px 30px;
         border-radius: 6px;
         outline: none;
-        width: 210px;
+        width: 230px;
         transition: width 0.2s, border-color 0.2s;
       }
 
       .search-input:focus {
         border-color: #0284c7;
-        width: 250px;
+        width: 270px;
       }
 
       .search-icon {
@@ -238,7 +230,6 @@
         pointer-events: none;
       }
 
-      /* Filter Chips for Domains */
       .domain-filters {
         display: flex;
         align-items: center;
@@ -282,7 +273,6 @@
         border-style: dashed;
       }
 
-      /* View Mode Segmented Control */
       .segmented-control {
         display: inline-flex;
         background: var(--bg-elevated);
@@ -310,7 +300,6 @@
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
       }
 
-      /* Sliders popover / inline controls */
       .slider-control {
         display: flex;
         align-items: center;
@@ -325,7 +314,6 @@
         cursor: pointer;
       }
 
-      /* Main Visualization Canvas */
       #chart-container {
         position: relative;
         flex: 1;
@@ -344,7 +332,6 @@
         cursor: grabbing;
       }
 
-      /* SVG Nodes and Styling */
       .bubble-node {
         cursor: pointer;
         transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease;
@@ -355,7 +342,7 @@
       }
 
       .bubble-node:hover circle {
-        filter: drop-shadow(0 0 14px rgba(255, 255, 255, 0.45));
+        filter: drop-shadow(0 0 14px rgba(255, 255, 255, 0.5));
       }
 
       .node-label {
@@ -377,7 +364,6 @@
         text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
       }
 
-      /* Domain Boundaries / Clusters */
       .domain-pod {
         cursor: pointer;
       }
@@ -414,11 +400,6 @@
         filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.35)) !important;
       }
 
-      .domain-label-group:hover text {
-        fill: #ffffff !important;
-        opacity: 1 !important;
-      }
-
       .domain-centroid-label {
         font-size: 10px;
         font-weight: 700;
@@ -427,10 +408,8 @@
         fill: var(--text-primary);
         opacity: 0.95;
         pointer-events: none;
-        transition: all 0.2s ease;
       }
 
-      /* Association Links */
       .assoc-link {
         fill: none;
         stroke-linecap: round;
@@ -439,12 +418,11 @@
         transition: stroke-opacity 0.25s, stroke-width 0.25s;
       }
 
-      /* Floating Tooltip */
       #tooltip {
         position: absolute;
         pointer-events: none;
         background: var(--bg-card);
-        backdrop-filter: blur(12px);
+        backdrop-filter: blur(14px);
         border: 1px solid var(--border-color);
         box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
         padding: 12px 16px;
@@ -554,7 +532,6 @@
         color: var(--text-muted);
       }
 
-      /* Side Drawer */
       #drawer {
         position: fixed;
         top: 0;
@@ -758,7 +735,6 @@
         border-color: rgba(255, 255, 255, 0.3);
       }
 
-      /* Quick Toast Notifications */
       #toast {
         position: fixed;
         bottom: 20px;
@@ -783,7 +759,6 @@
         transform: translateX(-50%) translateY(0);
       }
 
-      /* Modal backdrop when drawer is open on mobile */
       #backdrop {
         position: fixed;
         inset: 0;
@@ -800,7 +775,6 @@
         pointer-events: auto;
       }
 
-      /* Legend overlay in bottom left */
       .canvas-legend {
         position: absolute;
         bottom: 16px;
@@ -847,7 +821,6 @@
         border: 3px solid rgba(255, 255, 255, 0.9);
       }
 
-      /* Zoom controls floating in bottom right */
       .zoom-controls {
         position: absolute;
         bottom: 16px;
@@ -879,7 +852,6 @@
         background: var(--border-hover);
       }
 
-      /* Responsive rules */
       @media (max-width: 900px) {
         .header-stats {
           display: none;
@@ -888,7 +860,7 @@
           padding: 8px 12px;
         }
         .search-input {
-          width: 150px;
+          width: 160px;
         }
         .domain-filters {
           display: none;
@@ -900,159 +872,137 @@
     </style>
   </head>
   <body>
-    <!-- Top Executive Header -->
+    <!-- Encabezado Ejecutivo Directivo -->
     <header>
       <div class="brand-zone">
-        <div class="brand-logo-badge" title="Sistema Operativo Integrado The Company">SYS</div>
+        <div class="brand-logo-badge" title="Sistema Operativo Integrado Venemergencia">SOIV</div>
         <div>
-          <div class="brand-title">The Company Operational Map</div>
-          <div class="brand-sub">Multi-Dimensional Strategic Initiative Chart</div>
+          <div class="brand-title">Mapa Operativo SOIV - Venemergencia</div>
+          <div class="brand-sub">Matriz Estratégica Multidimensional de Iniciativas</div>
         </div>
       </div>
 
       <div class="header-stats">
         <div class="stat-item">
-          <span>Total Initiatives:</span>
+          <span>Iniciativas Totales:</span>
           <span class="stat-val tabular-nums" id="stat-total">25</span>
         </div>
         <div class="stat-item">
-          <span>Macro-Domains:</span>
+          <span>Macrodominios:</span>
           <span class="stat-val tabular-nums">5</span>
         </div>
         <div class="stat-item">
-          <span>Quick Wins:</span>
+          <span>Victorias Rápidas:</span>
           <span class="stat-val tabular-nums" id="stat-quick-wins" style="color: #10b981;">6</span>
         </div>
         <div class="stat-item">
-          <span>Avg Importance:</span>
+          <span>Importancia Promedio:</span>
           <span class="stat-val tabular-nums" id="stat-avg-imp">88.2</span>
         </div>
       </div>
 
       <div class="header-actions">
-        <button class="btn" id="btn-quick-wins" title="Filter high importance (>=85) and moderate complexity (<=55)">
+        <button class="btn" id="btn-quick-wins" title="Filtrar alta importancia (>=85) y complejidad moderada (<=55)">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
-          Quick Wins
+          Victorias Rápidas
         </button>
-        <button class="btn" id="btn-copy-code" title="Copy self-contained single HTML file for CodePen, JSFiddle, or GitHub Pages">
+        <button class="btn" id="btn-copy-code" title="Copiar archivo HTML autónomo completo para usar en GitHub Pages, CodePen o localmente">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-          Copy Single HTML
+          Copiar HTML
         </button>
-        <button class="btn" id="btn-download-html" title="Download standalone HTML file">
+        <button class="btn" id="btn-download-html" title="Descargar archivo HTML independiente">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-          Export .html
+          Exportar .html
         </button>
-        <button class="btn" id="btn-theme" title="Toggle Light / Dark mode">
+        <button class="btn" id="btn-theme" title="Alternar modo claro / oscuro">
           <svg id="theme-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
         </button>
       </div>
     </header>
 
-    <!-- Interactive Filter Toolbar -->
+    <!-- Barra de Herramientas y Filtros -->
     <div class="toolbar">
       <div class="toolbar-left">
-        <!-- Search Input -->
         <div class="search-box">
           <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-          <input type="text" id="search-input" class="search-input" placeholder="Search 25 initiatives..." />
+          <input type="text" id="search-input" class="search-input" placeholder="Buscar en 25 iniciativas..." />
         </div>
 
-        <!-- Domain Filter Chips -->
-        <div class="domain-filters" id="domain-filters-container">
-          <!-- Populated by JS -->
-        </div>
+        <div class="domain-filters" id="domain-filters-container"></div>
       </div>
 
       <div class="toolbar-right">
-        <!-- Layout Mode Switch -->
         <div class="segmented-control" id="view-mode-control">
-          <button class="segmented-btn active" data-mode="cluster">Cluster View</button>
-          <button class="segmented-btn" data-mode="matrix">Matrix (Imp vs Comp)</button>
+          <button class="segmented-btn active" data-mode="cluster">Vista Clústeres</button>
+          <button class="segmented-btn" data-mode="matrix">Matriz (Imp vs Comp)</button>
         </div>
 
-        <!-- Importance Slider -->
-        <div class="slider-control" title="Filter minimum importance score">
-          <span>Min Imp: <strong id="lbl-min-imp" class="tabular-nums">75</strong></span>
+        <div class="slider-control" title="Filtrar por puntaje mínimo de importancia">
+          <span>Imp. Mín: <strong id="lbl-min-imp" class="tabular-nums">75</strong></span>
           <input type="range" id="slider-importance" min="75" max="96" value="75" />
         </div>
 
-        <!-- Reset Button -->
-        <button class="btn" id="btn-reset-filters" style="font-size: 11px; padding: 4px 8px;">Reset</button>
+        <button class="btn" id="btn-reset-filters" style="font-size: 11px; padding: 4px 8px;">Restablecer</button>
       </div>
     </div>
 
-    <!-- Main Chart Canvas -->
+    <!-- Lienzo Principal -->
     <div id="chart-container">
       <svg id="chart-svg"></svg>
 
-      <!-- Floating Tooltip -->
-      <div id="tooltip">
-        <div class="tooltip-title" id="tt-title">Initiative Title</div>
-        <div class="tooltip-domain" id="tt-domain">Domain</div>
-        <div class="tooltip-metrics">
-          <div class="metric-box">
-            <span class="metric-label">Importance</span>
-            <span class="metric-val tabular-nums" id="tt-imp" style="color: #38bdf8;">0</span>
-          </div>
-          <div class="metric-box">
-            <span class="metric-label">Complexity</span>
-            <span class="metric-val tabular-nums" id="tt-comp" style="color: #fb923c;">0</span>
-          </div>
-        </div>
-        <div class="tooltip-footer">Click node to inspect full dossier & connections</div>
-      </div>
+      <!-- Tooltip Flotante -->
+      <div id="tooltip"></div>
 
-      <!-- Canvas Legend (Visual encoding summary) -->
+      <!-- Leyenda Visual -->
       <div class="canvas-legend">
-        <div class="legend-title">Visual Dimensions</div>
+        <div class="legend-title">Dimensiones Visuales</div>
         <div class="legend-row">
           <div class="legend-circle-small"></div>
-          <span>Radius = Importance Score (20px - 72px)</span>
+          <span>Radio = Importancia Estratégica (22px - 68px)</span>
         </div>
         <div class="legend-row">
           <div class="legend-circle-large"></div>
-          <span>Border Stroke = Complexity (1 - 100)</span>
+          <span>Grosor de Borde = Complejidad Operativa (1 - 100)</span>
         </div>
         <div class="legend-row">
           <span style="display:inline-block; width:16px; height:2px; background:rgba(255,255,255,0.6); border-top:1px dashed #ffffff;"></span>
-          <span>Curved Arcs = Shared Cross-Domain Links</span>
+          <span>Arcos = Conexiones Interdominios</span>
         </div>
       </div>
 
-      <!-- Floating Zoom Controls -->
+      <!-- Controles de Zoom -->
       <div class="zoom-controls">
-        <button class="zoom-btn" id="btn-zoom-in" title="Zoom in">+</button>
-        <button class="zoom-btn" id="btn-zoom-out" title="Zoom out">−</button>
-        <button class="zoom-btn" id="btn-zoom-reset" title="Reset view and fit">⟲</button>
+        <button class="zoom-btn" id="btn-zoom-in" title="Acercar">+</button>
+        <button class="zoom-btn" id="btn-zoom-out" title="Alejar">−</button>
+        <button class="zoom-btn" id="btn-zoom-reset" title="Restablecer vista centrada">⟲</button>
       </div>
     </div>
 
-    <!-- Backdrop for Mobile Drawer -->
+    <!-- Fondo desenfocado para móvil -->
     <div id="backdrop"></div>
 
-    <!-- Executive Detail Drawer -->
+    <!-- Panel de Detalle Lateral (Dossier) -->
     <aside id="drawer" aria-labelledby="drawer-title" aria-hidden="true">
       <div class="drawer-header">
         <div>
-          <div class="drawer-domain-tag" id="drawer-domain-tag">Domain</div>
-          <h2 class="drawer-title" id="drawer-title">Initiative Name</h2>
-          <div class="drawer-category" id="drawer-category">Category</div>
+          <div class="drawer-domain-tag" id="drawer-domain-tag">Dominio</div>
+          <h2 class="drawer-title" id="drawer-title">Nombre de la Iniciativa</h2>
+          <div class="drawer-category" id="drawer-category">Categoría</div>
         </div>
-        <button class="drawer-close" id="drawer-close" aria-label="Close dossier">✕</button>
+        <button class="drawer-close" id="drawer-close" aria-label="Cerrar expediente">✕</button>
       </div>
 
       <div class="drawer-body">
-        <!-- KPI Score Cards -->
         <div class="score-cards-grid">
           <div class="score-card">
-            <div class="score-title">Importance Score</div>
+            <div class="score-title">Puntaje de Importancia</div>
             <div class="score-number tabular-nums" id="drawer-imp-val">90</div>
             <div class="score-bar-bg">
               <div class="score-bar-fill" id="drawer-imp-bar" style="background: #0284c7; width: 90%;"></div>
             </div>
           </div>
           <div class="score-card">
-            <div class="score-title">Complexity Score</div>
+            <div class="score-title">Grado de Complejidad</div>
             <div class="score-number tabular-nums" id="drawer-comp-val">65</div>
             <div class="score-bar-bg">
               <div class="score-bar-fill" id="drawer-comp-bar" style="background: #f59e0b; width: 65%;"></div>
@@ -1060,761 +1010,802 @@
           </div>
         </div>
 
-        <!-- Cross-Domain Associations -->
-        <div class="section-block" id="drawer-assoc-block">
-          <div class="section-header">Shared Cross-Domain Associations</div>
-          <div class="shared-badge-list" id="drawer-assoc-list">
-            <!-- Badges -->
+        <div class="section-block" id="drawer-scope-block">
+          <div class="section-header" style="color: #38bdf8;">
+            Alcance Estructural del Macrodominio
           </div>
+          <div id="drawer-scope-text" style="font-size: 13px; line-height: 1.5; color: var(--text-primary); background: var(--bg-elevated); padding: 10px 12px; border-radius: 6px; border: 1px solid var(--border-color);"></div>
         </div>
 
-        <!-- Pros (Strategic Advantages) -->
+        <div class="section-block" id="drawer-assoc-block">
+          <div class="section-header">Asociaciones Cruzadas Compartidas</div>
+          <div class="shared-badge-list" id="drawer-assoc-list"></div>
+        </div>
+
         <div class="section-block">
           <div class="section-header" style="color: #10b981;">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
-            Strategic Advantages (Pros)
+            Ventajas Estratégicas (Pros)
           </div>
-          <ul class="bullet-list" id="drawer-pros-list">
-            <!-- Pros -->
-          </ul>
+          <ul class="bullet-list" id="drawer-pros-list"></ul>
         </div>
 
-        <!-- Cons (Risks & Hurdles) -->
         <div class="section-block">
           <div class="section-header" style="color: #f43f5e;">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
-            Operational Risks & Hurdles (Cons)
+            Riesgos Operativos y Obstáculos (Contras)
           </div>
-          <ul class="bullet-list" id="drawer-cons-list">
-            <!-- Cons -->
-          </ul>
+          <ul class="bullet-list" id="drawer-cons-list"></ul>
         </div>
 
-        <!-- Requirements (Technical Prerequisites) -->
         <div class="section-block">
           <div class="section-header" style="color: #38bdf8;">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
-            Technical Prerequisites
+            Requisitos Técnicos y Prerrequisitos
           </div>
-          <ul class="bullet-list" id="drawer-reqs-list">
-            <!-- Requirements -->
-          </ul>
+          <ul class="bullet-list" id="drawer-reqs-list"></ul>
         </div>
       </div>
     </aside>
 
-    <!-- Feedback Toast -->
-    <div id="toast">Code copied to clipboard!</div>
+    <div id="toast">¡Mensaje copiado!</div>
 
-    <!-- Application Logic & Data Script -->
+    <!-- Script de Lógica e Inicialización -->
     <script>
       (function () {
-        // -------------------------------------------------------------
-        // 1. DATASET
-        // -------------------------------------------------------------
+        const CONTAINERS = [
+  {
+    "Identifier": "core_case_mgmt",
+    "Name": "Gestión Central de Casos",
+    "Structural_Scope": "Seguimiento del ciclo de vida, priorización dinámica de colas, trazabilidad completa de acciones, deduplicación de datos"
+  },
+  {
+    "Identifier": "ops_intelligence",
+    "Name": "Inteligencia Operativa y Mando Visual",
+    "Structural_Scope": "Monitoreo en tiempo real, semáforo de triaje visual, panel de trabajo del médico auditor"
+  },
+  {
+    "Identifier": "process_automation",
+    "Name": "Automatización de Procesos y Gobernanza de Flujos de Trabajo",
+    "Structural_Scope": "Alertas de retrasos en SLA, activadores por documentos faltantes, estandarización de flujos de trabajo, motor de RPA"
+  },
+  {
+    "Identifier": "allied_network_ecosystem",
+    "Name": "Ecosistema y Habilitación de Redes Aliadas",
+    "Structural_Scope": "Portal para redes aliadas, guías digitales de procesos (SOP), chat seguro, microcapacitación, evaluaciones de desempeño"
+  },
+  {
+    "Identifier": "analytics_predictive_ai",
+    "Name": "Analítica, IA Predictiva y Arquitectura del Conocimiento",
+    "Structural_Scope": "KPIs de cuellos de botella, IA para análisis de causa raíz, alertas predictivas de SLA, buscador inteligente, Asistente de IA de SOIV"
+  }
+];
         const DATA = {
-          graph_metadata: {
-            system: "SYS - Sistema Operativo Integrado The Company",
-            version: "2.4.0",
-            total_initiatives: 25,
-            macro_domains: 5,
-            generated_at: "2026-10-26T21:42:00Z"
-          },
-          parent_domains: [
-            {
-              id: "core_case_mgmt",
-              short_name: "Core Case Management",
-              importance_score: 92,
-              complexity_score: 75,
-              color: "#0284c7",
-              light_color: "#e0f2fe",
-              glow: "rgba(2, 132, 199, 0.4)",
-              metadata: {
-                category: "Core Infrastructure",
-                description: "Foundational transactional layer for case management, priority queuing, audit logging, and data deduplication."
-              }
-            },
-            {
-              id: "ops_intelligence",
-              short_name: "Ops Intelligence",
-              importance_score: 88,
-              complexity_score: 62,
-              color: "#0d9488",
-              light_color: "#ccfbf1",
-              glow: "rgba(13, 148, 136, 0.4)",
-              metadata: {
-                category: "Command & Control",
-                description: "Real-time visual monitoring systems, operational dashboards, status triaging, and auditor interfaces."
-              }
-            },
-            {
-              id: "process_automation",
-              short_name: "Process Automation",
-              importance_score: 86,
-              complexity_score: 55,
-              color: "#10b981",
-              light_color: "#d1fae5",
-              glow: "rgba(16, 185, 129, 0.4)",
-              metadata: {
-                category: "Workflow Governance",
-                description: "Automated SLA delay tracking, document verification triggers, process standardization, and RPA workflows."
-              }
-            },
-            {
-              id: "allied_network_ecosystem",
-              short_name: "Allied Network Ecosystem",
-              importance_score: 84,
-              complexity_score: 50,
-              color: "#f59e0b",
-              light_color: "#fef3c7",
-              glow: "rgba(245, 158, 11, 0.4)",
-              metadata: {
-                category: "Partner Enablement",
-                description: "External third-party provider integration, digital SOP guidance, secure messaging, micro-training, and scorecards."
-              }
-            },
-            {
-              id: "analytics_predictive_ai",
-              short_name: "Analytics & Predictive AI",
-              importance_score: 90,
-              complexity_score: 72,
-              color: "#8b5cf6",
-              light_color: "#ede9fe",
-              glow: "rgba(139, 92, 246, 0.4)",
-              metadata: {
-                category: "Advanced Intelligence",
-                description: "Cognitive operational analytics, root-cause anomaly detection, predictive SLA risk modeling, and embedded AI assistants."
-              }
-            }
-          ],
-          nodes: [
-            {
-              id: "idea_01_central_ops_hub",
-              short_name: "Centralized Ops Hub",
-              importance_score: 96,
-              complexity_score: 75,
-              parent_id: "ops_intelligence",
-              shared_associations: ["core_case_mgmt", "analytics_predictive_ai"],
-              metadata: {
-                category: "Operational Intelligence & Dashboarding",
-                pros: [
-                  "Consolidates disparate operational views into a single command dashboard",
-                  "Eliminates interface switching for active emergency dispatchers",
-                  "Dramatically improves situational awareness during emergency surges"
-                ],
-                cons: [
-                  "High backend data aggregation requirements across multiple service modules",
-                  "Risk of operational bottleneck if central server availability drops"
-                ],
-                requirements: [
-                  "Micro-frontend framework implementation",
-                  "High-throughput real-time data streaming pipeline (Apache Kafka or Redis Streams)",
-                  "Unified WebSocket API gateway"
-                ]
-              }
-            },
-            {
-              id: "idea_02_sla_delay_alerts",
-              short_name: "SLA Delay Alerts",
-              importance_score: 85,
-              complexity_score: 45,
-              parent_id: "process_automation",
-              shared_associations: ["ops_intelligence"],
-              metadata: {
-                category: "Process Automation & Monitoring",
-                pros: [
-                  "Proactively notifies supervisors before SLA breach limits are exceeded",
-                  "Reduces total patient waiting time during emergency responses"
-                ],
-                cons: [
-                  "Risk of alert fatigue if threshold triggers are uncalibrated",
-                  "Requires strict definition of SLA limits across diverse case types"
-                ],
-                requirements: [
-                  "Automated background cron evaluation engine",
-                  "Multi-channel push notification service (WebSockets, SMS, Email)",
-                  "Configurable SLA rule definition module"
-                ]
-              }
-            },
-            {
-              id: "idea_03_case_status_triage",
-              short_name: "Case Status Triage",
-              importance_score: 82,
-              complexity_score: 35,
-              parent_id: "ops_intelligence",
-              shared_associations: ["core_case_mgmt"],
-              metadata: {
-                category: "Operational Intelligence & Dashboarding",
-                pros: [
-                  "Provides immediate visual status clarity using intuitive visual indicators",
-                  "Allows dispatch operators to focus on critical yellow/red cases instantly"
-                ],
-                cons: [
-                  "Over-simplification of complex clinical scenarios into discrete color buckets"
-                ],
-                requirements: [
-                  "Dynamic visual UI component library",
-                  "Real-time state transition evaluator service"
-                ]
-              }
-            },
-            {
-              id: "idea_04_realtime_dashboard",
-              short_name: "Real-Time Dashboard",
-              importance_score: 89,
-              complexity_score: 65,
-              parent_id: "ops_intelligence",
-              shared_associations: ["analytics_predictive_ai"],
-              metadata: {
-                category: "Operational Intelligence & Dashboarding",
-                pros: [
-                  "Provides live metrics on pending, active, and closed emergency cases",
-                  "Empowers management to dynamically reallocate dispatch personnel"
-                ],
-                cons: [
-                  "Demands low-latency database queries and UI re-rendering optimization"
-                ],
-                requirements: [
-                  "In-memory caching layer (Redis)",
-                  "Real-time event subscription service",
-                  "Optimized frontend canvas rendering"
-                ]
-              }
-            },
-            {
-              id: "idea_05_allied_portal",
-              short_name: "Allied Network Portal",
-              importance_score: 91,
-              complexity_score: 65,
-              parent_id: "allied_network_ecosystem",
-              shared_associations: ["ops_intelligence"],
-              metadata: {
-                category: "Allied Network Integration",
-                pros: [
-                  "Provides third-party medical partners with direct access to SYS requirements",
-                  "Standardizes inbound information flow from allied networks"
-                ],
-                cons: [
-                  "Requires strict external access security controls and multi-tenancy rules",
-                  "User adoption dependency on external partner staff training"
-                ],
-                requirements: [
-                  "Secure multi-tenant web application portal",
-                  "OAuth2 / OpenID Connect partner authentication layer",
-                  "Granular role-based access control (RBAC)"
-                ]
-              }
-            },
-            {
-              id: "idea_06_process_standardization",
-              short_name: "Process Digitalization",
-              importance_score: 94,
-              complexity_score: 70,
-              parent_id: "process_automation",
-              shared_associations: ["allied_network_ecosystem"],
-              metadata: {
-                category: "Process Automation & Monitoring",
-                pros: [
-                  "Harmonizes operational behavior across regional branches and external allies",
-                  "Eliminates undocumented manual workarounds and rogue operating methods"
-                ],
-                cons: [
-                  "Requires high organizational change management effort",
-                  "Initial resistance from regional teams used to local procedures"
-                ],
-                requirements: [
-                  "BPMN process execution engine (e.g., Camunda)",
-                  "Standardized digital protocol repository",
-                  "Branch governance auditing framework"
-                ]
-              }
-            },
-            {
-              id: "idea_07_allied_sop_guide",
-              short_name: "Allied SOP Guide",
-              importance_score: 83,
-              complexity_score: 35,
-              parent_id: "allied_network_ecosystem",
-              shared_associations: ["process_automation"],
-              metadata: {
-                category: "Allied Network Integration",
-                pros: [
-                  "Offers dynamic step-by-step guidance for allied operators during case processing",
-                  "Reduces administrative error rates in external partner submissions"
-                ],
-                cons: [
-                  "Requires ongoing maintenance as operating procedures change"
-                ],
-                requirements: [
-                  "Interactive wizard UI builder",
-                  "CMS integration for SOP documentation updates"
-                ]
-              }
-            },
-            {
-              id: "idea_08_e2e_tracking",
-              short_name: "End-to-End Tracking",
-              importance_score: 95,
-              complexity_score: 70,
-              parent_id: "core_case_mgmt",
-              shared_associations: ["ops_intelligence", "allied_network_ecosystem"],
-              metadata: {
-                category: "Core Case Management",
-                pros: [
-                  "Establishes unbroken line-of-sight tracking from intake to closure",
-                  "Eliminates operational blind spots across transferred patient cases"
-                ],
-                cons: [
-                  "Demands persistent data syncing across disparate clinical touchpoints"
-                ],
-                requirements: [
-                  "HL7 / FHIR clinical interoperability standards support",
-                  "Centralized event bus tracing architecture",
-                  "State persistence manager"
-                ]
-              }
-            },
-            {
-              id: "idea_09_missing_data_alerts",
-              short_name: "Missing Data Alerts",
-              importance_score: 80,
-              complexity_score: 40,
-              parent_id: "process_automation",
-              shared_associations: ["allied_network_ecosystem"],
-              metadata: {
-                category: "Process Automation & Monitoring",
-                pros: [
-                  "Automatically detects missing documentation required for medical audits",
-                  "Shortens total case cycle times by resolving missing data early"
-                ],
-                cons: [
-                  "Can result in frequent partner alerts if form field rules are overly rigid"
-                ],
-                requirements: [
-                  "Dynamic JSON schema validation engine",
-                  "Automated messaging webhook triggers"
-                ]
-              }
-            },
-            {
-              id: "idea_10_bottleneck_kpis",
-              short_name: "Bottleneck KPIs",
-              importance_score: 88,
-              complexity_score: 55,
-              parent_id: "analytics_predictive_ai",
-              shared_associations: ["ops_intelligence"],
-              metadata: {
-                category: "Analytics & Quality Governance",
-                pros: [
-                  "Pinpoints specific operational queues causing major patient delays",
-                  "Provides objective data to guide process re-engineering investments"
-                ],
-                cons: [
-                  "Dependency on accurate user timestamp logging across all process steps"
-                ],
-                requirements: [
-                  "Data warehouse OLAP cube aggregation",
-                  "Automated ETL pipeline for event duration extraction",
-                  "BI visualization API integration"
-                ]
-              }
-            },
-            {
-              id: "idea_11_ai_root_cause_engine",
-              short_name: "AI Root-Cause Engine",
-              importance_score: 89,
-              complexity_score: 80,
-              parent_id: "analytics_predictive_ai",
-              shared_associations: ["process_automation"],
-              metadata: {
-                category: "Advanced AI & Predictive Analytics",
-                pros: [
-                  "Automatically uncovers recurring operational failures across historical records",
-                  "Identifies systemic issues human auditors overlook"
-                ],
-                cons: [
-                  "High computational cost and model training complexity",
-                  "Requires extensive clean historical data archives"
-                ],
-                requirements: [
-                  "Unsupervised machine learning pattern mining algorithms",
-                  "Python / PyTorch model serving microservice",
-                  "Historical log data repository"
-                ]
-              }
-            },
-            {
-              id: "idea_12_exec_reports",
-              short_name: "Executive Ops Reports",
-              importance_score: 81,
-              complexity_score: 45,
-              parent_id: "analytics_predictive_ai",
-              shared_associations: ["ops_intelligence"],
-              metadata: {
-                category: "Analytics & Quality Governance",
-                pros: [
-                  "Automates performance reporting for supervisors and management",
-                  "Saves manual report generation effort every operating cycle"
-                ],
-                cons: [
-                  "Static reports can lead to passive monitoring without actionable triggers"
-                ],
-                requirements: [
-                  "Scheduled PDF/HTML generation background service",
-                  "Email and messaging integration layer",
-                  "Configurable report template manager"
-                ]
-              }
-            },
-            {
-              id: "idea_13_priority_matrix",
-              short_name: "Dynamic Priority System",
-              importance_score: 90,
-              complexity_score: 50,
-              parent_id: "core_case_mgmt",
-              shared_associations: ["ops_intelligence"],
-              metadata: {
-                category: "Core Case Management",
-                pros: [
-                  "Ensures severe, life-threatening emergency cases bypass routine queues",
-                  "Dynamically escalates aging cases based on clinical urgency"
-                ],
-                cons: [
-                  "Requires strict consensus on clinical prioritization criteria"
-                ],
-                requirements: [
-                  "Priority score calculation engine",
-                  "Dynamic queue re-sorting algorithm",
-                  "Integration with dispatch management UI"
-                ]
-              }
-            },
-            {
-              id: "idea_14_allied_comms_channel",
-              short_name: "Secure Allied Chat",
-              importance_score: 84,
-              complexity_score: 50,
-              parent_id: "allied_network_ecosystem",
-              shared_associations: ["core_case_mgmt"],
-              metadata: {
-                category: "Allied Network Integration",
-                pros: [
-                  "Enables context-aware chat directly attached to active case files",
-                  "Eliminates unmonitored external messaging apps for case updates"
-                ],
-                cons: [
-                  "Requires content archiving to maintain medical regulatory compliance"
-                ],
-                requirements: [
-                  "WebRTC or WebSocket real-time messaging server",
-                  "End-to-end data encryption layer",
-                  "File and media attachment scanner service"
-                ]
-              }
-            },
-            {
-              id: "idea_15_allied_micro_training",
-              short_name: "Digital Micro-Training",
-              importance_score: 78,
-              complexity_score: 40,
-              parent_id: "allied_network_ecosystem",
-              shared_associations: ["process_automation"],
-              metadata: {
-                category: "Allied Network Integration",
-                pros: [
-                  "Accelerates onboarding for new allied network personnel",
-                  "Ensures consistent partner compliance with The Company protocols"
-                ],
-                cons: [
-                  "Requires initial media production and regular content updates"
-                ],
-                requirements: [
-                  "Embedded Learning Management System (LMS) module",
-                  "Interactive SCORM/xAPI video content player",
-                  "Completion tracking and certification API"
-                ]
-              }
-            },
-            {
-              id: "idea_16_smart_search",
-              short_name: "Enterprise Smart Search",
-              importance_score: 87,
-              complexity_score: 65,
-              parent_id: "analytics_predictive_ai",
-              shared_associations: ["core_case_mgmt"],
-              metadata: {
-                category: "Knowledge & Search Infrastructure",
-                pros: [
-                  "Provides instant indexed search across medical records, patients, and SOPs",
-                  "Reduces information lookup latency during active triage"
-                ],
-                cons: [
-                  "Requires real-time indexing and strict security rules to protect patient privacy"
-                ],
-                requirements: [
-                  "Elasticsearch / OpenSearch cluster integration",
-                  "Document transformation and indexing pipeline",
-                  "Attribute-Based Access Control (ABAC) search filter layer"
-                ]
-              }
-            },
-            {
-              id: "idea_17_operational_kb",
-              short_name: "Operational Knowledge Base",
-              importance_score: 79,
-              complexity_score: 35,
-              parent_id: "analytics_predictive_ai",
-              shared_associations: ["allied_network_ecosystem"],
-              metadata: {
-                category: "Knowledge & Search Infrastructure",
-                pros: [
-                  "Empowers staff and allied network operators to self-resolve routine queries",
-                  "Reduces administrative supervisory escalations"
-                ],
-                cons: [
-                  "Knowledge base content becomes obsolete without dedicated maintainers"
-                ],
-                requirements: [
-                  "Headless CMS for knowledge documentation",
-                  "Semantic document tagging taxonomy",
-                  "Feedback voting and article utility analytics"
-                ]
-              }
-            },
-            {
-              id: "idea_18_rpa_workflow",
-              short_name: "RPA Workflow Automation",
-              importance_score: 86,
-              complexity_score: 65,
-              parent_id: "process_automation",
-              shared_associations: ["core_case_mgmt"],
-              metadata: {
-                category: "Process Automation & Monitoring",
-                pros: [
-                  "Automates repetitive manual data re-entry between systems",
-                  "Frees dispatch operators to focus on emergency clinical tasks"
-                ],
-                cons: [
-                  "Robotic automation scripts require updates when external portals change UI layouts"
-                ],
-                requirements: [
-                  "Robotic Process Automation runner framework",
-                  "Headless browser orchestration service",
-                  "Exception handling and alert dispatch system"
-                ]
-              }
-            },
-            {
-              id: "idea_19_predictive_risk_alerts",
-              short_name: "Predictive Risk Alerts",
-              importance_score: 93,
-              complexity_score: 85,
-              parent_id: "analytics_predictive_ai",
-              shared_associations: ["process_automation", "ops_intelligence"],
-              metadata: {
-                category: "Advanced AI & Predictive Analytics",
-                pros: [
-                  "Forecasts potential SLA violations before they occur",
-                  "Enables pre-emptive dispatch interventions and dynamic resource adjustments"
-                ],
-                cons: [
-                  "High computational complexity and model calibration requirements",
-                  "Risk of operational disruption from false positive predictions"
-                ],
-                requirements: [
-                  "Predictive time-series model runtime engine",
-                  "Real-time streaming feature store (Feast)",
-                  "Event stream prediction consumer"
-                ]
-              }
-            },
-            {
-              id: "idea_20_audit_traceability",
-              short_name: "Complete Audit Trail",
-              importance_score: 88,
-              complexity_score: 60,
-              parent_id: "core_case_mgmt",
-              shared_associations: ["analytics_predictive_ai"],
-              metadata: {
-                category: "Core Case Management",
-                pros: [
-                  "Logs every user action, case edit, and status change",
-                  "Ensures full legal, clinical, and regulatory audit compliance"
-                ],
-                cons: [
-                  "Generates high log data volume requiring scalable write architectures"
-                ],
-                requirements: [
-                  "Immutable write-once log repository",
-                  "Distributed event logging framework (OpenTelemetry)",
-                  "Audit event querying interface"
-                ]
-              }
-            },
-            {
-              id: "idea_21_allied_scorecard",
-              short_name: "Allied Scorecard System",
-              importance_score: 86,
-              complexity_score: 60,
-              parent_id: "allied_network_ecosystem",
-              shared_associations: ["analytics_predictive_ai"],
-              metadata: {
-                category: "Analytics & Quality Governance",
-                pros: [
-                  "Evaluates partner performance using objective response and compliance metrics",
-                  "Improves provider service delivery through automated quality scoring"
-                ],
-                cons: [
-                  "Partner tension if scoring logic is perceived as rigid or unadjusted for local conditions"
-                ],
-                requirements: [
-                  "Automated provider rating calculation engine",
-                  "Partner performance metrics dashboard",
-                  "Monthly compliance reporting service"
-                ]
-              }
-            },
-            {
-              id: "idea_22_system_integration",
-              short_name: "System Integration Engine",
-              importance_score: 92,
-              complexity_score: 85,
-              parent_id: "core_case_mgmt",
-              shared_associations: ["process_automation", "allied_network_ecosystem"],
-              metadata: {
-                category: "Core Case Management",
-                pros: [
-                  "Eliminates duplicate data entry across distinct operational departments",
-                  "Harmonizes case master data across the entire organization"
-                ],
-                cons: [
-                  "Complex refactoring of legacy system interfaces",
-                  "Potential operational risk during data bus migration"
-                ],
-                requirements: [
-                  "Enterprise Master Data Management (MDM) architecture",
-                  "Centralized REST/gRPC API gateway layer",
-                  "Database schema harmonization"
-                ]
-              }
-            },
-            {
-              id: "idea_23_medical_auditor_desk",
-              short_name: "Medical Auditor Desk",
-              importance_score: 87,
-              complexity_score: 55,
-              parent_id: "ops_intelligence",
-              shared_associations: ["core_case_mgmt", "analytics_predictive_ai"],
-              metadata: {
-                category: "Operational Intelligence & Dashboarding",
-                pros: [
-                  "Accelerates clinical authorization decisions with a dedicated auditor UI",
-                  "Consolidates patient histories and medical charts into a single audit screen"
-                ],
-                cons: [
-                  "Requires strict role-based access security for sensitive patient health data"
-                ],
-                requirements: [
-                  "Role-tailored workspace interface",
-                  "Secure medical document inline viewer",
-                  "One-click audit decision execution workflow"
-                ]
-              }
-            },
-            {
-              id: "idea_24_incident_frequency_stats",
-              short_name: "Incident Frequency Stats",
-              importance_score: 85,
-              complexity_score: 50,
-              parent_id: "analytics_predictive_ai",
-              shared_associations: ["ops_intelligence"],
-              metadata: {
-                category: "Analytics & Quality Governance",
-                pros: [
-                  "Quantifies operational incident trends to target process enhancements",
-                  "Provides statistical evidence for medical protocol updates"
-                ],
-                cons: [
-                  "Relies on clean, standardized incident categorization during case entry"
-                ],
-                requirements: [
-                  "Statistical aggregation pipeline",
-                  "Time-series database store (TimescaleDB or InfluxDB)",
-                  "Dynamic charting UI layer"
-                ]
-              }
-            },
-            {
-              id: "idea_25_sys_ai_assistant",
-              short_name: "SYS AI Assistant",
-              importance_score: 94,
-              complexity_score: 90,
-              parent_id: "analytics_predictive_ai",
-              shared_associations: ["core_case_mgmt", "allied_network_ecosystem"],
-              metadata: {
-                category: "Advanced AI & Predictive Analytics",
-                pros: [
-                  "Provides interactive contextual guidance on correct operating procedures inside SYS",
-                  "Dramatically reduces operator error rates during complex medical dispatch triage"
-                ],
-                cons: [
-                  "Requires model fine-tuning and safety guardrails against AI hallucinations",
-                  "High deployment effort and clinical review validation requirements"
-                ],
-                requirements: [
-                  "Retrieval-Augmented Generation (RAG) architecture",
-                  "Domain-tuned LLM inference pipeline",
-                  "Embedded conversational UI widget inside SYS core frontend"
-                ]
-              }
-            }
-          ]
-        };
+  "graph_metadata": {
+    "system": "SOIV - Sistema Operativo Integrado Venemergencia",
+    "version": "2.4.0",
+    "total_initiatives": 25,
+    "macro_domains": 5,
+    "generated_at": "2026-10-26T21:42:00Z"
+  },
+  "parent_domains": [
+    {
+      "id": "core_case_mgmt",
+      "short_name": "Gestión Central de Casos",
+      "importance_score": 92,
+      "complexity_score": 75,
+      "color": "#0284c7",
+      "light_color": "#e0f2fe",
+      "glow": "rgba(2, 132, 199, 0.45)",
+      "metadata": {
+        "category": "Infraestructura Central",
+        "description": "Capa transaccional fundamental para la gestión de casos, priorización de colas, registro de auditoría y deduplicación de datos."
+      }
+    },
+    {
+      "id": "ops_intelligence",
+      "short_name": "Inteligencia Operativa",
+      "importance_score": 88,
+      "complexity_score": 62,
+      "color": "#0d9488",
+      "light_color": "#ccfbf1",
+      "glow": "rgba(13, 148, 136, 0.45)",
+      "metadata": {
+        "category": "Mando y Control",
+        "description": "Sistemas de monitoreo visual en tiempo real, tableros operativos, triaje de estatus e interfaces para médicos auditores."
+      }
+    },
+    {
+      "id": "process_automation",
+      "short_name": "Automatización de Procesos",
+      "importance_score": 86,
+      "complexity_score": 55,
+      "color": "#10b981",
+      "light_color": "#d1fae5",
+      "glow": "rgba(16, 185, 129, 0.45)",
+      "metadata": {
+        "category": "Gobernanza de Flujos de Trabajo",
+        "description": "Seguimiento automatizado de retrasos en SLA, activadores de verificación de documentos, estandarización de procesos y flujos RPA."
+      }
+    },
+    {
+      "id": "allied_network_ecosystem",
+      "short_name": "Ecosistema de Redes Aliadas",
+      "importance_score": 84,
+      "complexity_score": 50,
+      "color": "#f59e0b",
+      "light_color": "#fef3c7",
+      "glow": "rgba(245, 158, 11, 0.45)",
+      "metadata": {
+        "category": "Habilitación de Aliados",
+        "description": "Integración de proveedores externos, guía digital de procedimientos (SOP), mensajería segura, microcapacitación y evaluaciones."
+      }
+    },
+    {
+      "id": "analytics_predictive_ai",
+      "short_name": "Analítica e IA Predictiva",
+      "importance_score": 90,
+      "complexity_score": 72,
+      "color": "#8b5cf6",
+      "light_color": "#ede9fe",
+      "glow": "rgba(139, 92, 246, 0.45)",
+      "metadata": {
+        "category": "Inteligencia Avanzada",
+        "description": "Analítica operativa cognitiva, detección de causa raíz de anomalías, modelado predictivo de riesgos de SLA y asistentes de IA integrados."
+      }
+    }
+  ],
+  "nodes": [
+    {
+      "id": "idea_01_central_ops_hub",
+      "short_name": "Módulo Operativo Central",
+      "importance_score": 96,
+      "complexity_score": 75,
+      "parent_id": "ops_intelligence",
+      "shared_associations": [
+        "core_case_mgmt",
+        "analytics_predictive_ai"
+      ],
+      "metadata": {
+        "category": "Inteligencia Operativa y Tableros",
+        "pros": [
+          "Consolida vistas operativas dispersas en un único tablero de mando",
+          "Elimina el cambio de interfaces para los despachadores de emergencias activos",
+          "Mejora drásticamente la visibilidad situacional durante picos de demanda operativa"
+        ],
+        "cons": [
+          "Altos requerimientos de agregación de datos en el backend entre múltiples módulos de servicio",
+          "Riesgo de cuello de botella operativo si cae la disponibilidad del servidor central"
+        ],
+        "requirements": [
+          "Implementación de arquitectura de micro-frontends",
+          "Pipeline de transmisión de datos en tiempo real de alto rendimiento (Apache Kafka o Redis Streams)",
+          "Gateway unificado de API WebSocket"
+        ]
+      }
+    },
+    {
+      "id": "idea_02_sla_delay_alerts",
+      "short_name": "Alertas de Retraso de SLA",
+      "importance_score": 85,
+      "complexity_score": 45,
+      "parent_id": "process_automation",
+      "shared_associations": [
+        "ops_intelligence"
+      ],
+      "metadata": {
+        "category": "Automatización de Procesos y Monitoreo",
+        "pros": [
+          "Notifica proactivamente a los supervisores antes de superar los límites de incumplimiento de SLA",
+          "Reduce el tiempo total de espera del paciente durante respuestas de emergencia"
+        ],
+        "cons": [
+          "Riesgo de fatiga por alertas si los umbrales de activación no están bien calibrados",
+          "Requiere una definición estricta de límites de SLA para diversos tipos de casos"
+        ],
+        "requirements": [
+          "Motor de evaluación de tareas cron automatizadas en segundo plano",
+          "Servicio de notificaciones push multicanal (WebSockets, SMS, correo electrónico)",
+          "Módulo configurable para la definición de reglas de SLA"
+        ]
+      }
+    },
+    {
+      "id": "idea_03_case_status_triage",
+      "short_name": "Semáforo de Casos",
+      "importance_score": 82,
+      "complexity_score": 35,
+      "parent_id": "ops_intelligence",
+      "shared_associations": [
+        "core_case_mgmt"
+      ],
+      "metadata": {
+        "category": "Inteligencia Operativa y Tableros",
+        "pros": [
+          "Proporciona claridad visual inmediata sobre el estatus mediante indicadores intuitivos",
+          "Permite a los operadores de despacho enfocarse al instante en casos críticos (amarillo/rojo)"
+        ],
+        "cons": [
+          "Excesiva simplificación de escenarios clínicos complejos en categorías de color discretas"
+        ],
+        "requirements": [
+          "Biblioteca de componentes visuales dinámicos de UI",
+          "Servicio evaluador de transiciones de estado en tiempo real"
+        ]
+      }
+    },
+    {
+      "id": "idea_04_realtime_dashboard",
+      "short_name": "Tablero en Tiempo Real",
+      "importance_score": 89,
+      "complexity_score": 65,
+      "parent_id": "ops_intelligence",
+      "shared_associations": [
+        "analytics_predictive_ai"
+      ],
+      "metadata": {
+        "category": "Inteligencia Operativa y Tableros",
+        "pros": [
+          "Ofrece métricas en vivo sobre casos pendientes, atendidos y cerrados",
+          "Empodera a la gerencia para reasignar personal de despacho de manera dinámica"
+        ],
+        "cons": [
+          "Exige consultas a la base de datos de baja latencia y optimización de renderizado en UI"
+        ],
+        "requirements": [
+          "Capa de almacenamiento en memoria caché (Redis)",
+          "Servicio de suscripción a eventos en tiempo real",
+          "Renderizado optimizado en lienzo frontend (canvas)"
+        ]
+      }
+    },
+    {
+      "id": "idea_05_allied_portal",
+      "short_name": "Portal de Redes Aliadas",
+      "importance_score": 91,
+      "complexity_score": 65,
+      "parent_id": "allied_network_ecosystem",
+      "shared_associations": [
+        "ops_intelligence"
+      ],
+      "metadata": {
+        "category": "Integración de Redes Aliadas",
+        "pros": [
+          "Proporciona a los aliados médicos acceso directo a los requerimientos y procesos de Venemergencia",
+          "Estandariza el flujo de información entrante proveniente de redes aliadas"
+        ],
+        "cons": [
+          "Requiere estrictos controles de seguridad para acceso externo y reglas de multitenencia",
+          "Dependencia en la capacitación del personal del aliado para la adopción del usuario"
+        ],
+        "requirements": [
+          "Portal de aplicación web multitenant seguro",
+          "Capa de autenticación de aliados vía OAuth2 / OpenID Connect",
+          "Control de acceso basado en roles (RBAC) granular"
+        ]
+      }
+    },
+    {
+      "id": "idea_06_process_standardization",
+      "short_name": "Digitalización de Procesos",
+      "importance_score": 94,
+      "complexity_score": 70,
+      "parent_id": "process_automation",
+      "shared_associations": [
+        "allied_network_ecosystem"
+      ],
+      "metadata": {
+        "category": "Automatización de Procesos y Monitoreo",
+        "pros": [
+          "Armoniza el comportamiento operativo entre sedes regionales y aliados externos",
+          "Elimina soluciones manuales no documentadas y métodos operativos no estandarizados"
+        ],
+        "cons": [
+          "Requiere un alto esfuerzo de gestión del cambio organizacional",
+          "Resistencia inicial de equipos regionales acostumbrados a procedimientos locales"
+        ],
+        "requirements": [
+          "Motor de ejecución de procesos BPMN (ej. Camunda)",
+          "Repositorio digital de protocolos estandarizados",
+          "Marco de auditoría para la gobernanza de sedes"
+        ]
+      }
+    },
+    {
+      "id": "idea_07_allied_sop_guide",
+      "short_name": "Guía Digital de Procesos",
+      "importance_score": 83,
+      "complexity_score": 35,
+      "parent_id": "allied_network_ecosystem",
+      "shared_associations": [
+        "process_automation"
+      ],
+      "metadata": {
+        "category": "Integración de Redes Aliadas",
+        "pros": [
+          "Ofrece orientación dinámica paso a paso a operadores aliados durante el procesamiento del caso",
+          "Reduce las tasas de error administrativo en los envíos de aliados externos"
+        ],
+        "cons": [
+          "Requiere mantenimiento continuo a medida que cambian los procedimientos operativos"
+        ],
+        "requirements": [
+          "Constructor UI de asistentes interactivos (wizards)",
+          "Integración con CMS para actualizaciones de documentación de procedimientos (SOP)"
+        ]
+      }
+    },
+    {
+      "id": "idea_08_e2e_tracking",
+      "short_name": "Seguimiento Integral de Casos",
+      "importance_score": 95,
+      "complexity_score": 70,
+      "parent_id": "core_case_mgmt",
+      "shared_associations": [
+        "ops_intelligence",
+        "allied_network_ecosystem"
+      ],
+      "metadata": {
+        "category": "Gestión Central de Casos",
+        "pros": [
+          "Establece un seguimiento continuo sin puntos ciegos desde el ingreso hasta el cierre",
+          "Elimina vacíos de información operativa en casos de pacientes transferidos"
+        ],
+        "cons": [
+          "Exige sincronización persistente de datos entre múltiples puntos de contacto clínicos"
+        ],
+        "requirements": [
+          "Soporte para estándares de interoperabilidad clínica HL7 / FHIR",
+          "Arquitectura de rastreo mediante bus de eventos centralizado",
+          "Gestor de persistencia de estados"
+        ]
+      }
+    },
+    {
+      "id": "idea_09_missing_data_alerts",
+      "short_name": "Alertas de Documentos Faltantes",
+      "importance_score": 80,
+      "complexity_score": 40,
+      "parent_id": "process_automation",
+      "shared_associations": [
+        "allied_network_ecosystem"
+      ],
+      "metadata": {
+        "category": "Automatización de Procesos y Monitoreo",
+        "pros": [
+          "Detecta automáticamente la falta de documentación requerida para auditorías médicas",
+          "Acorta los tiempos del ciclo total del caso al resolver datos faltantes de forma temprana"
+        ],
+        "cons": [
+          "Puede generar alertas frecuentes a los aliados si las reglas de campos son muy rígidas"
+        ],
+        "requirements": [
+          "Motor de validación dinámica de esquemas JSON",
+          "Activadores automatizados de webhooks para mensajería"
+        ]
+      }
+    },
+    {
+      "id": "idea_10_bottleneck_kpis",
+      "short_name": "KPIs de Cuellos de Botella",
+      "importance_score": 88,
+      "complexity_score": 55,
+      "parent_id": "analytics_predictive_ai",
+      "shared_associations": [
+        "ops_intelligence"
+      ],
+      "metadata": {
+        "category": "Analítica y Gobernanza de Calidad",
+        "pros": [
+          "Identifica colas operativas específicas que generan los mayores retrasos",
+          "Aporta datos objetivos para orientar inversiones en reingeniería de procesos"
+        ],
+        "cons": [
+          "Dependencia del registro preciso de marcas de tiempo por parte del usuario en cada paso"
+        ],
+        "requirements": [
+          "Agregación mediante cubos OLAP en almacén de datos (Data Warehouse)",
+          "Pipeline ETL automatizado para extracción de duraciones de eventos",
+          "Integración con API de visualización de Inteligencia de Negocios (BI)"
+        ]
+      }
+    },
+    {
+      "id": "idea_11_ai_root_cause_engine",
+      "short_name": "Motor IA de Causa Raíz",
+      "importance_score": 89,
+      "complexity_score": 80,
+      "parent_id": "analytics_predictive_ai",
+      "shared_associations": [
+        "process_automation"
+      ],
+      "metadata": {
+        "category": "IA Avanzada y Analítica Predictiva",
+        "pros": [
+          "Descubre automáticamente fallas operativas repetitivas en registros históricos",
+          "Identifica problemas sistémicos que pasan desapercibidos para auditores humanos"
+        ],
+        "cons": [
+          "Alto costo computacional y complejidad en el entrenamiento del modelo",
+          "Requiere amplios archivos de datos históricos limpios"
+        ],
+        "requirements": [
+          "Algoritmos de minería de patrones mediante aprendizaje automático no supervisado",
+          "Microservicio para despliegue de modelos en Python / PyTorch",
+          "Repositorio de datos de registros históricos"
+        ]
+      }
+    },
+    {
+      "id": "idea_12_exec_reports",
+      "short_name": "Reportes Automáticos Gerenciales",
+      "importance_score": 81,
+      "complexity_score": 45,
+      "parent_id": "analytics_predictive_ai",
+      "shared_associations": [
+        "ops_intelligence"
+      ],
+      "metadata": {
+        "category": "Analítica y Gobernanza de Calidad",
+        "pros": [
+          "Automatiza los reportes de desempeño para supervisores y la Gerencia de Operaciones",
+          "Ahorra esfuerzo de generación manual de reportes en cada ciclo operativo"
+        ],
+        "cons": [
+          "Los reportes estáticos pueden derivar en monitoreo pasivo sin activadores de acción"
+        ],
+        "requirements": [
+          "Servicio programado en segundo plano para generación de PDF/HTML",
+          "Capa de integración para envío por correo electrónico y mensajería",
+          "Gestor de plantillas de reportes configurables"
+        ]
+      }
+    },
+    {
+      "id": "idea_13_priority_matrix",
+      "short_name": "Sistema de Prioridades Dinámico",
+      "importance_score": 90,
+      "complexity_score": 50,
+      "parent_id": "core_case_mgmt",
+      "shared_associations": [
+        "ops_intelligence"
+      ],
+      "metadata": {
+        "category": "Gestión Central de Casos",
+        "pros": [
+          "Garantiza que los casos de emergencia severos o vitales eviten colas rutinarias",
+          "Escala dinámicamente casos antiguos según su urgencia clínica"
+        ],
+        "cons": [
+          "Requiere un consenso estricto sobre los criterios de priorización clínica"
+        ],
+        "requirements": [
+          "Motor de cálculo de puntuación de prioridad",
+          "Algoritmo de reordenamiento dinámico de colas",
+          "Integración con la interfaz de gestión de despacho"
+        ]
+      }
+    },
+    {
+      "id": "idea_14_allied_comms_channel",
+      "short_name": "Canal de Chat con Aliados",
+      "importance_score": 84,
+      "complexity_score": 50,
+      "parent_id": "allied_network_ecosystem",
+      "shared_associations": [
+        "core_case_mgmt"
+      ],
+      "metadata": {
+        "category": "Integración de Redes Aliadas",
+        "pros": [
+          "Permite chat contextual adjunto directamente a los expedientes de casos activos",
+          "Elimina el uso de aplicaciones externas no monitoreadas para actualizaciones del caso"
+        ],
+        "cons": [
+          "Requiere archivado de contenidos para cumplir con regulaciones médicas"
+        ],
+        "requirements": [
+          "Servidor de mensajería en tiempo real basado en WebRTC o WebSockets",
+          "Capa de cifrado de datos de extremo a extremo",
+          "Servicio de escaneo de archivos y adjuntos multimedia"
+        ]
+      }
+    },
+    {
+      "id": "idea_15_allied_micro_training",
+      "short_name": "Microcapacitaciones Digitales",
+      "importance_score": 78,
+      "complexity_score": 40,
+      "parent_id": "allied_network_ecosystem",
+      "shared_associations": [
+        "process_automation"
+      ],
+      "metadata": {
+        "category": "Integración de Redes Aliadas",
+        "pros": [
+          "Acelera el onboarding del personal nuevo de las Redes Aliadas",
+          "Garantiza el cumplimiento constante de los protocolos de Venemergencia"
+        ],
+        "cons": [
+          "Requiere producción inicial de contenidos y actualizaciones periódicas"
+        ],
+        "requirements": [
+          "Módulo LMS (Sistema de Gestión de Aprendizaje) integrado",
+          "Reproductor de contenido interactivo SCORM/xAPI",
+          "API de seguimiento de finalización y certificación"
+        ]
+      }
+    },
+    {
+      "id": "idea_16_smart_search",
+      "short_name": "Buscador Inteligente",
+      "importance_score": 87,
+      "complexity_score": 65,
+      "parent_id": "analytics_predictive_ai",
+      "shared_associations": [
+        "core_case_mgmt"
+      ],
+      "metadata": {
+        "category": "Infraestructura de Búsqueda y Conocimiento",
+        "pros": [
+          "Proporciona búsqueda indexada instantánea en procedimientos, pacientes y expedientes",
+          "Reduce la latencia de consulta de información durante el triaje activo"
+        ],
+        "cons": [
+          "Requiere indexación en tiempo real y estrictas reglas de seguridad para datos de pacientes"
+        ],
+        "requirements": [
+          "Integración con clúster Elasticsearch / OpenSearch",
+          "Pipeline de transformación e indexación de documentos",
+          "Capa de filtros de búsqueda basada en atributos (ABAC)"
+        ]
+      }
+    },
+    {
+      "id": "idea_17_operational_kb",
+      "short_name": "Base de Conocimiento Operativa",
+      "importance_score": 79,
+      "complexity_score": 35,
+      "parent_id": "analytics_predictive_ai",
+      "shared_associations": [
+        "allied_network_ecosystem"
+      ],
+      "metadata": {
+        "category": "Infraestructura de Búsqueda y Conocimiento",
+        "pros": [
+          "Empodera al personal y aliados para resolver dudas frecuentes de manera autónoma",
+          "Reduce escalamientos administrativos a la supervisión"
+        ],
+        "cons": [
+          "El contenido de la base de conocimiento se vuelve obsoleto sin encargados dedicados"
+        ],
+        "requirements": [
+          "CMS Headless para documentación de conocimiento",
+          "Taxonomía de etiquetado semántico de documentos",
+          "Analítica de utilidad de artículos y votación de retroalimentación"
+        ]
+      }
+    },
+    {
+      "id": "idea_18_rpa_workflow",
+      "short_name": "Automatización de Tareas (RPA)",
+      "importance_score": 86,
+      "complexity_score": 65,
+      "parent_id": "process_automation",
+      "shared_associations": [
+        "core_case_mgmt"
+      ],
+      "metadata": {
+        "category": "Automatización de Procesos y Monitoreo",
+        "pros": [
+          "Automatiza la reentrada manual y repetitiva de datos entre sistemas",
+          "Libera a los operadores de despacho para enfocarse en tareas clínicas de emergencia"
+        ],
+        "cons": [
+          "Los scripts de automatización requieren ajustes si los portales externos cambian su interfaz"
+        ],
+        "requirements": [
+          "Framework de ejecución de Automatización Robótica de Procesos (RPA)",
+          "Servicio de orquestación de navegadores headless",
+          "Sistema de gestión de excepciones y despacho de alertas"
+        ]
+      }
+    },
+    {
+      "id": "idea_19_predictive_risk_alerts",
+      "short_name": "Alertas Predictivas de Riesgo",
+      "importance_score": 93,
+      "complexity_score": 85,
+      "parent_id": "analytics_predictive_ai",
+      "shared_associations": [
+        "process_automation",
+        "ops_intelligence"
+      ],
+      "metadata": {
+        "category": "IA Avanzada y Analítica Predictiva",
+        "pros": [
+          "Pronostica posibles incumplimientos de SLA antes de que afecten la atención",
+          "Permite intervenciones preventivas en el despacho y reasignación dinámica de recursos"
+        ],
+        "cons": [
+          "Alta complejidad computacional y exigencia de calibración del modelo",
+          "Riesgo de interrupciones operativas por falsos positivos"
+        ],
+        "requirements": [
+          "Motor de ejecución de modelos predictivos de series temporales",
+          "Almacén de características para flujo de datos en tiempo real (Feature Store)",
+          "Consumidor de predicciones sobre flujos de eventos"
+        ]
+      }
+    },
+    {
+      "id": "idea_20_audit_traceability",
+      "short_name": "Trazabilidad y Auditoría Completa",
+      "importance_score": 88,
+      "complexity_score": 60,
+      "parent_id": "core_case_mgmt",
+      "shared_associations": [
+        "analytics_predictive_ai"
+      ],
+      "metadata": {
+        "category": "Gestión Central de Casos",
+        "pros": [
+          "Registra cada acción de usuario, modificación de caso y cambio de estatus",
+          "Garantiza pleno cumplimiento legal, clínico y regulatorio"
+        ],
+        "cons": [
+          "Genera un alto volumen de datos de registros que exige arquitecturas de escritura escalables"
+        ],
+        "requirements": [
+          "Repositorio inmutable de registros de solo escritura",
+          "Framework distribuido de registro de eventos (OpenTelemetry)",
+          "Interfaz de consulta de eventos de auditoría"
+        ]
+      }
+    },
+    {
+      "id": "idea_21_allied_scorecard",
+      "short_name": "Evaluación de Redes Aliadas",
+      "importance_score": 86,
+      "complexity_score": 60,
+      "parent_id": "allied_network_ecosystem",
+      "shared_associations": [
+        "analytics_predictive_ai"
+      ],
+      "metadata": {
+        "category": "Analítica y Gobernanza de Calidad",
+        "pros": [
+          "Evalúa a los aliados con métricas objetivas de tiempo de respuesta y cumplimiento",
+          "Mejora la prestación del servicio mediante puntuación de calidad automatizada"
+        ],
+        "cons": [
+          "Fricción con aliados si la lógica de evaluación se percibe rígida o no ajustada a la realidad local"
+        ],
+        "requirements": [
+          "Motor automatizado de cálculo de calificación de proveedores",
+          "Tablero de métricas de desempeño de aliados",
+          "Servicio de reportes mensuales de cumplimiento"
+        ]
+      }
+    },
+    {
+      "id": "idea_22_system_integration",
+      "short_name": "Integración de Módulos Operativos",
+      "importance_score": 92,
+      "complexity_score": 85,
+      "parent_id": "core_case_mgmt",
+      "shared_associations": [
+        "process_automation",
+        "allied_network_ecosystem"
+      ],
+      "metadata": {
+        "category": "Gestión Central de Casos",
+        "pros": [
+          "Elimina la duplicación de información entre distintas áreas operativas",
+          "Armoniza los datos maestros de casos en toda la organización"
+        ],
+        "cons": [
+          "Refactorización compleja de interfaces de sistemas legados",
+          "Riesgo operativo potencial durante la migración del bus de datos"
+        ],
+        "requirements": [
+          "Arquitectura empresarial de Gestión de Datos Maestros (MDM)",
+          "Capa centralizada de API Gateway REST/gRPC",
+          "Armonización de esquemas de bases de datos"
+        ]
+      }
+    },
+    {
+      "id": "idea_23_medical_auditor_desk",
+      "short_name": "Panel del Médico Auditor",
+      "importance_score": 87,
+      "complexity_score": 55,
+      "parent_id": "ops_intelligence",
+      "shared_associations": [
+        "core_case_mgmt",
+        "analytics_predictive_ai"
+      ],
+      "metadata": {
+        "category": "Inteligencia Operativa y Tableros",
+        "pros": [
+          "Acelera decisiones de autorización clínica mediante una interfaz dedicada para el auditor",
+          "Consolida historiales y expedientes médicos en una sola pantalla de revisión"
+        ],
+        "cons": [
+          "Requiere una estricta seguridad de acceso basada en roles para proteger datos de salud sensibles"
+        ],
+        "requirements": [
+          "Interfaz de espacio de trabajo adaptada al rol",
+          "Visualizador integrado seguro para documentos médicos",
+          "Flujo de ejecución de decisiones de auditoría en un clic"
+        ]
+      }
+    },
+    {
+      "id": "idea_24_incident_frequency_stats",
+      "short_name": "Estadísticas de Frecuencia de Problemas",
+      "importance_score": 85,
+      "complexity_score": 50,
+      "parent_id": "analytics_predictive_ai",
+      "shared_associations": [
+        "ops_intelligence"
+      ],
+      "metadata": {
+        "category": "Analítica y Gobernanza de Calidad",
+        "pros": [
+          "Cuantifica tendencias de incidentes para enfocar mejoras en los procesos",
+          "Aporta evidencia estadística para la actualización de protocolos médicos"
+        ],
+        "cons": [
+          "Depende de una categorización limpia y estandarizada durante el registro de casos"
+        ],
+        "requirements": [
+          "Pipeline de agregación estadística",
+          "Almacén de base de datos de series temporales (TimescaleDB o InfluxDB)",
+          "Capa de UI para graficación dinámica"
+        ]
+      }
+    },
+    {
+      "id": "idea_25_soiv_ai_assistant",
+      "short_name": "Asistente Inteligente SOIV",
+      "importance_score": 94,
+      "complexity_score": 90,
+      "parent_id": "analytics_predictive_ai",
+      "shared_associations": [
+        "core_case_mgmt",
+        "allied_network_ecosystem"
+      ],
+      "metadata": {
+        "category": "IA Avanzada y Analítica Predictiva",
+        "pros": [
+          "Orienta interactivamente al trabajador sobre el procedimiento a seguir dentro de SOIV",
+          "Reduce drásticamente las tasas de error del operador durante el triaje y despacho"
+        ],
+        "cons": [
+          "Requiere ajuste fino del modelo y barreras de seguridad para evitar alucinaciones",
+          "Alto esfuerzo de despliegue y validación por parte del equipo médico auditor"
+        ],
+        "requirements": [
+          "Arquitectura de Generación Aumentada por Recuperación (RAG)",
+          "Pipeline de inferencia de LLM ajustado al dominio médico-operativo",
+          "Widget conversacional integrado en el frontend principal de SOIV"
+        ]
+      }
+    }
+  ]
+};
 
-        // Domain lookup map
         const domainMap = {};
         DATA.parent_domains.forEach(d => {
           domainMap[d.id] = d;
         });
 
-        // 5 Macro-Domain Containers metadata with Structural Scope
-        const Containers = [
-          {
-            "Identifier": "core_case_mgmt",
-            "Name": "Core Case Management",
-            "Structural_Scope": "Lifecycle tracking, dynamic priority queuing, full action traceability, data deduplication"
-          },
-          {
-            "Identifier": "ops_intelligence",
-            "Name": "Operational Intelligence & Visual Command",
-            "Structural_Scope": "Real-time monitoring, visual triage traffic lights, medical auditor workspace"
-          },
-          {
-            "Identifier": "process_automation",
-            "Name": "Process Automation & Workflow Governance",
-            "Structural_Scope": "SLA delay alerts, missing document triggers, workflow standardization, RPA engine"
-          },
-          {
-            "Identifier": "allied_network_ecosystem",
-            "Name": "Allied Network Ecosystem & Enablement",
-            "Structural_Scope": "Allied partner portal, digital SOPs, secure chat, micro-training, performance scorecards"
-          },
-          {
-            "Identifier": "analytics_predictive_ai",
-            "Name": "Analytics, Predictive AI & Knowledge Architecture",
-            "Structural_Scope": "Bottleneck KPIs, root-cause AI, predictive SLA alerts, smart search, SYS AI Assistant"
-          }
-        ];
-
         const containerLookup = {};
-        Containers.forEach(c => {
+        CONTAINERS.forEach(c => {
           containerLookup[c.Identifier] = c;
         });
 
-        // -------------------------------------------------------------
-        // 2. STATE MANAGEMENT
-        // -------------------------------------------------------------
         const state = {
           selectedDomains: new Set(DATA.parent_domains.map(d => d.id)),
           searchQuery: "",
@@ -1823,26 +1814,19 @@
           activeNodeId: null,
           hoveredNodeId: null,
           hoveredContainerId: null,
-          viewMode: "cluster", // "cluster" | "matrix"
+          viewMode: "cluster",
           isDarkTheme: true
         };
 
-        // -------------------------------------------------------------
-        // 3. COLOR & SIZING SCALES
-        // -------------------------------------------------------------
         const impExtent = d3.extent(DATA.nodes, d => d.importance_score);
         const radiusScale = d3.scaleSqrt()
           .domain([impExtent[0] || 75, impExtent[1] || 100])
           .range([22, 68]);
 
-        // Pre-compute node radii
         DATA.nodes.forEach(n => {
           n.radius = radiusScale(n.importance_score);
         });
 
-        // -------------------------------------------------------------
-        // 4. DOM REFERENCES & SETUP
-        // -------------------------------------------------------------
         const container = document.getElementById("chart-container");
         const svg = d3.select("#chart-svg");
         const tooltip = document.getElementById("tooltip");
@@ -1853,13 +1837,11 @@
         let width = container.clientWidth || 1200;
         let height = container.clientHeight || 750;
 
-        // Container groups
         const gMain = svg.append("g").attr("class", "main-viewport");
         const gBackground = gMain.append("g").attr("class", "background-layer");
         const gLinks = gMain.append("g").attr("class", "links-layer");
         const gNodes = gMain.append("g").attr("class", "nodes-layer");
 
-        // SVG Filters for Glow Effect
         const defs = svg.append("defs");
         const filter = defs.append("filter")
           .attr("id", "bubble-glow")
@@ -1867,31 +1849,13 @@
           .attr("y", "-50%")
           .attr("width", "200%")
           .attr("height", "200%");
-        filter.append("feGaussianBlur")
-          .attr("stdDeviation", "8")
-          .attr("result", "blur");
+        filter.append("feGaussianBlur").attr("stdDeviation", "8").attr("result", "blur");
         filter.append("feMerge")
           .selectAll("feMergeNode")
           .data(["blur", "SourceGraphic"])
           .enter().append("feMergeNode")
           .attr("in", d => d);
 
-        // Marker for directed links if needed
-        defs.append("marker")
-          .attr("id", "link-arrow")
-          .attr("viewBox", "0 -5 10 10")
-          .attr("refX", 10)
-          .attr("refY", 0)
-          .attr("markerWidth", 6)
-          .attr("markerHeight", 6)
-          .attr("orient", "auto")
-          .append("path")
-          .attr("d", "M0,-5L10,0L0,5")
-          .attr("fill", "rgba(255,255,255,0.4)");
-
-        // -------------------------------------------------------------
-        // 5. ZOOM BEHAVIOR
-        // -------------------------------------------------------------
         const zoom = d3.zoom()
           .scaleExtent([0.35, 3.5])
           .on("zoom", (event) => {
@@ -1900,9 +1864,6 @@
 
         svg.call(zoom).on("dblclick.zoom", null);
 
-        // -------------------------------------------------------------
-        // 6. CENTROID COORDINATES CALCULATION
-        // -------------------------------------------------------------
         function computeDomainCentroids(w, h) {
           const cx = w / 2;
           const cy = h / 2 + 16;
@@ -1912,7 +1873,6 @@
           const count = domainIds.length;
 
           domainIds.forEach((id, i) => {
-            // Distribute 5 domains evenly in a pentagonal arrangement
             const angle = (i * 2 * Math.PI) / count - Math.PI / 2;
             centroids[id] = {
               x: cx + r * Math.cos(angle),
@@ -1925,15 +1885,11 @@
 
         let domainCentroids = computeDomainCentroids(width, height);
 
-        // -------------------------------------------------------------
-        // 7. D3 FORCE SIMULATION
-        // -------------------------------------------------------------
         const simulation = d3.forceSimulation(DATA.nodes)
           .force("center", d3.forceCenter(width / 2, height / 2 + 16).strength(0.04))
           .force("collide", d3.forceCollide(d => d.radius + 6).strength(0.9))
           .force("x", d3.forceX(d => {
             if (state.viewMode === "matrix") {
-              // X mapped by Complexity (0 to 100)
               const xPadding = 120;
               return xPadding + (d.complexity_score / 100) * (width - xPadding * 2);
             }
@@ -1941,7 +1897,6 @@
           }).strength(d => state.viewMode === "matrix" ? 0.8 : 0.35))
           .force("y", d3.forceY(d => {
             if (state.viewMode === "matrix") {
-              // Y mapped inversely by Importance (high importance near top)
               const yPadding = 100;
               const norm = (d.importance_score - 75) / (100 - 75);
               return height - yPadding - norm * (height - yPadding * 2);
@@ -1951,7 +1906,6 @@
           .force("charge", d3.forceManyBody().strength(-20))
           .alphaDecay(0.022);
 
-        // Drag handlers
         function dragstarted(event, d) {
           if (!event.active) simulation.alphaTarget(0.3).restart();
           d.fx = d.x;
@@ -1969,16 +1923,12 @@
           d.fy = null;
         }
 
-        // -------------------------------------------------------------
-        // 8. RENDER BACKGROUND DOMAIN HULLS & MATRIX AXES
-        // -------------------------------------------------------------
         function renderBackground() {
           gBackground.selectAll("*").remove();
 
           if (state.viewMode === "cluster") {
             const podRadius = Math.min(width, height) * 0.20;
 
-            // Draw soft circular pods for each domain centroid
             const pods = gBackground.selectAll(".domain-pod")
               .data(DATA.parent_domains)
               .enter()
@@ -1986,7 +1936,6 @@
               .attr("class", "domain-pod")
               .attr("data-domain-id", d => d.id);
 
-            // Container Pod Circle
             pods.append("circle")
               .attr("class", "domain-pod-circle")
               .attr("cx", d => domainCentroids[d.id]?.x || 0)
@@ -2003,7 +1952,6 @@
               .on("mouseleave", (event, d) => onContainerLeave(event, d))
               .on("click", (event, d) => onContainerClick(event, d));
 
-            // Container Outward Label Header Group (positioned outside main bubbles)
             const labels = pods.append("g")
               .attr("class", "domain-label-group")
               .on("mouseenter", (event, d) => onContainerHover(event, d))
@@ -2017,7 +1965,6 @@
               const angle = centroid.angle;
               const cos = Math.cos(angle);
               const sin = Math.sin(angle);
-              // Push label outward along the radial line from center
               const labelDist = podRadius + 32;
               const rawLx = centroid.x + labelDist * cos;
               const rawLy = centroid.y + labelDist * sin;
@@ -2027,14 +1974,12 @@
               const badgeWidth = Math.max(165, labelTitle.length * 7.5 + 50);
               const badgeHeight = 28;
 
-              // Clamp inside viewport so label never gets clipped off-screen
               const clampedLx = Math.max(badgeWidth / 2 + 18, Math.min(width - badgeWidth / 2 - 18, rawLx));
               const clampedLy = Math.max(badgeHeight / 2 + 16, Math.min(height - badgeHeight / 2 - 16, rawLy));
 
               const g = d3.select(this)
-                .attr("transform", `translate(${clampedLx}, ${clampedLy})`);
+                .attr("transform", "translate(" + clampedLx + ", " + clampedLy + ")");
 
-              // Frosted capsule pill background
               g.append("rect")
                 .attr("class", "domain-badge-bg")
                 .attr("x", -badgeWidth / 2)
@@ -2047,14 +1992,12 @@
                 .attr("stroke-width", 1.5)
                 .attr("stroke-opacity", 0.55);
 
-              // Indicator dot
               g.append("circle")
                 .attr("cx", -badgeWidth / 2 + 14)
                 .attr("cy", 0)
                 .attr("r", 4.5)
                 .attr("fill", d.color);
 
-              // Uppercase title label
               g.append("text")
                 .attr("class", "domain-centroid-label")
                 .attr("x", -badgeWidth / 2 + 25)
@@ -2063,7 +2006,6 @@
                 .attr("fill", "var(--text-primary)")
                 .text(labelTitle.toUpperCase());
 
-              // Initiative counter badge inside pill
               g.append("rect")
                 .attr("x", badgeWidth / 2 - 27)
                 .attr("y", -8)
@@ -2084,13 +2026,10 @@
                 .text(domainInitiatives.length);
             });
           } else if (state.viewMode === "matrix") {
-            // Draw 2D Matrix Grid: X = Complexity, Y = Importance
             const xPadding = 120;
             const yPadding = 100;
 
             const grid = gBackground.append("g").attr("class", "matrix-grid");
-
-            // Quadrant divider lines
             const midX = width / 2;
             const midY = height / 2;
 
@@ -2106,12 +2045,11 @@
               .attr("stroke", "rgba(255,255,255,0.12)")
               .attr("stroke-dasharray", "3 3");
 
-            // Quadrant Labels
             const qLabels = [
-              { text: "QUICK WINS (High Impact, Low Effort)", x: xPadding + 30, y: yPadding + 20, color: "#10b981" },
-              { text: "STRATEGIC BETS (High Impact, High Effort)", x: width - xPadding - 240, y: yPadding + 20, color: "#8b5cf6" },
-              { text: "TACTICAL / INCREMENTAL", x: xPadding + 30, y: height - yPadding - 16, color: "#94a3b8" },
-              { text: "RE-EVALUATE / DE-PRIORITIZE", x: width - xPadding - 220, y: height - yPadding - 16, color: "#f43f5e" }
+              { text: "VICTORIAS RÁPIDAS (Alto Impacto, Menor Complejidad)", x: xPadding + 30, y: yPadding + 20, color: "#10b981" },
+              { text: "APUESTAS ESTRATÉGICAS (Alto Impacto, Mayor Complejidad)", x: width - xPadding - 280, y: yPadding + 20, color: "#8b5cf6" },
+              { text: "MEJORAS INCREMENTALES / TÁCTICAS", x: xPadding + 30, y: height - yPadding - 16, color: "#94a3b8" },
+              { text: "REEVALUAR / DESPRIORIZAR", x: width - xPadding - 230, y: height - yPadding - 16, color: "#f43f5e" }
             ];
 
             qLabels.forEach(q => {
@@ -2124,32 +2062,27 @@
                 .text(q.text);
             });
 
-            // Axes Labels
             grid.append("text")
               .attr("x", width / 2).attr("y", height - yPadding + 35)
               .attr("text-anchor", "middle")
               .attr("fill", "var(--text-secondary)")
               .attr("font-size", "12px")
               .attr("font-weight", "600")
-              .text("Complexity Score (1 → 100) →");
+              .text("Grado de Complejidad Operativa (1 → 100) →");
 
             grid.append("text")
-              .attr("transform", `rotate(-90)`)
+              .attr("transform", "rotate(-90)")
               .attr("x", -height / 2).attr("y", xPadding - 35)
               .attr("text-anchor", "middle")
               .attr("fill", "var(--text-secondary)")
               .attr("font-size", "12px")
               .attr("font-weight", "600")
-              .text("Importance Score (75 → 100) →");
+              .text("Puntaje de Importancia Estratégica (75 → 100) →");
           }
         }
 
-        // -------------------------------------------------------------
-        // 9. CROSS-DOMAIN CONNECTING LINKS
-        // -------------------------------------------------------------
         function updateLinks() {
           const linksData = [];
-
           const activeOrHovered = state.hoveredNodeId || state.activeNodeId;
 
           if (activeOrHovered) {
@@ -2169,7 +2102,7 @@
           }
 
           const linkSelection = gLinks.selectAll(".assoc-link")
-            .data(linksData, d => `${d.sourceNode.id}->${d.domainId}`);
+            .data(linksData, d => d.sourceNode.id + "->" + d.domainId);
 
           linkSelection.exit().remove();
 
@@ -2186,18 +2119,14 @@
               const sy = d.sourceNode.y;
               const tx = d.targetCentroid.x;
               const ty = d.targetCentroid.y;
-              // Smooth quadratic Bezier curve
               const dx = tx - sx;
               const dy = ty - sy;
               const cx = (sx + tx) / 2 - dy * 0.2;
               const cy = (sy + ty) / 2 + dx * 0.2;
-              return `M${sx},${sy} Q${cx},${cy} ${tx},${ty}`;
+              return "M" + sx + "," + sy + " Q" + cx + "," + cy + " " + tx + "," + ty;
             });
         }
 
-        // -------------------------------------------------------------
-        // 10. RENDER BUBBLE NODES
-        // -------------------------------------------------------------
         let nodeElements = null;
 
         function renderNodes() {
@@ -2216,26 +2145,15 @@
                   .on("mouseleave", (event, d) => onNodeLeave(event, d))
                   .on("click", (event, d) => onNodeClick(event, d));
 
-                // Outer Complexity Ring (Dictated by complexity_score)
                 g.append("circle")
                   .attr("class", "outer-ring")
                   .attr("r", d => d.radius)
                   .attr("fill", d => domainMap[d.parent_id]?.color || "#0284c7")
                   .attr("fill-opacity", 0.82)
-                  .attr("stroke", d => {
-                    const domain = domainMap[d.parent_id];
-                    return domain ? domain.color : "#ffffff";
-                  })
-                  .attr("stroke-width", d => {
-                    // Higher complexity = thicker outer ring (2px to 6.5px)
-                    return 2 + (d.complexity_score / 100) * 4.5;
-                  })
-                  .attr("stroke-opacity", d => {
-                    // Higher complexity = darker / more opaque ring
-                    return 0.5 + (d.complexity_score / 100) * 0.5;
-                  });
+                  .attr("stroke", d => domainMap[d.parent_id]?.color || "#ffffff")
+                  .attr("stroke-width", d => 2 + (d.complexity_score / 100) * 4.5)
+                  .attr("stroke-opacity", d => 0.5 + (d.complexity_score / 100) * 0.5);
 
-                // Inner decorative ring
                 g.append("circle")
                   .attr("class", "inner-ring")
                   .attr("r", d => Math.max(0, d.radius - 3.5))
@@ -2243,35 +2161,29 @@
                   .attr("stroke", "rgba(255, 255, 255, 0.25)")
                   .attr("stroke-width", 1);
 
-                // Short Name Label (Multi-line wrapped inside circle)
-                const text = g.append("text")
+                g.append("text")
                   .attr("class", "node-label")
                   .attr("y", -3);
 
-                // Value subtext (Importance & Complexity)
                 g.append("text")
                   .attr("class", "node-sub")
                   .attr("y", d => Math.min(18, d.radius * 0.42))
-                  .text(d => `★${d.importance_score} · c${d.complexity_score}`);
+                  .text(d => "★" + d.importance_score + " · c" + d.complexity_score);
 
                 return g;
               }
             );
 
-          // Format multi-line wrapped labels
           nodeElements.each(function (d) {
             const el = d3.select(this).select(".node-label");
             el.selectAll("tspan").remove();
 
             const words = d.short_name.split(/\s+/);
             const radius = d.radius;
-
-            // Choose font size based on radius
             const fontSize = radius > 55 ? 12 : (radius > 40 ? 10.5 : 9);
-            el.style("font-size", `${fontSize}px`);
+            el.style("font-size", fontSize + "px");
 
             if (words.length <= 2 || radius < 34) {
-              // 1 or 2 words or small bubble
               if (words.length > 2) {
                 el.append("tspan").attr("x", 0).attr("dy", "-0.2em").text(words.slice(0, 2).join(" "));
                 el.append("tspan").attr("x", 0).attr("dy", "1.15em").text(words.slice(2).join(" "));
@@ -2279,7 +2191,6 @@
                 el.append("tspan").attr("x", 0).attr("dy", "0.3em").text(d.short_name);
               }
             } else {
-              // 3+ words: split into 2 lines
               const mid = Math.ceil(words.length / 2);
               const line1 = words.slice(0, mid).join(" ");
               const line2 = words.slice(mid).join(" ");
@@ -2291,9 +2202,6 @@
           applyFiltering();
         }
 
-        // -------------------------------------------------------------
-        // 11. FILTERING & HIGHLIGHTING
-        // -------------------------------------------------------------
         function applyFiltering() {
           if (!nodeElements) return;
 
@@ -2317,17 +2225,13 @@
             }
 
             const isVisible = isDomainActive && isImpActive && matchesQuickWin && matchesSearch;
-
             if (isVisible) matchCount++;
 
             const el = d3.select(this);
 
-            // Opacity & interactive state
             if (!isVisible) {
-              el.style("opacity", 0.08)
-                .style("pointer-events", "none");
+              el.style("opacity", 0.08).style("pointer-events", "none");
             } else {
-              // Check if another node is hovered / active
               const activeId = state.hoveredNodeId || state.activeNodeId;
               if (activeId) {
                 const activeNode = DATA.nodes.find(n => n.id === activeId);
@@ -2337,78 +2241,54 @@
                 const isSameParent = activeNode?.parent_id === d.parent_id;
 
                 if (isSelf) {
-                  el.style("opacity", 1)
-                    .attr("filter", "url(#bubble-glow)");
+                  el.style("opacity", 1).attr("filter", "url(#bubble-glow)");
                 } else if (isSharedMatch || isSameParent) {
-                  el.style("opacity", 0.95)
-                    .attr("filter", null);
+                  el.style("opacity", 0.95).attr("filter", null);
                 } else {
-                  el.style("opacity", 0.18)
-                    .attr("filter", null);
+                  el.style("opacity", 0.18).attr("filter", null);
                 }
               } else if (state.hoveredContainerId) {
-                // If hovering a container pod, highlight its bubbles and dim others
                 if (d.parent_id === state.hoveredContainerId) {
                   el.style("opacity", 1).attr("filter", null);
                 } else {
                   el.style("opacity", 0.18).attr("filter", null);
                 }
               } else {
-                el.style("opacity", 1)
-                  .style("pointer-events", "auto")
-                  .attr("filter", null);
+                el.style("opacity", 1).style("pointer-events", "auto").attr("filter", null);
               }
             }
           });
 
-          // Update stats
           const totalStat = document.getElementById("stat-total");
-          if (totalStat) totalStat.textContent = `${matchCount} / 25`;
+          if (totalStat) totalStat.textContent = matchCount + " / 25";
         }
 
-        // -------------------------------------------------------------
-        // 12. TICK UPDATE
-        // -------------------------------------------------------------
         simulation.on("tick", () => {
           if (nodeElements) {
-            nodeElements.attr("transform", d => `translate(${d.x},${d.y})`);
+            nodeElements.attr("transform", d => "translate(" + d.x + "," + d.y + ")");
           }
           updateLinks();
         });
 
-        // -------------------------------------------------------------
-        // 13. HOVER & TOOLTIP LOGIC
-        // -------------------------------------------------------------
         function onNodeHover(event, d) {
           state.hoveredNodeId = d.id;
           applyFiltering();
           updateLinks();
 
           const domain = domainMap[d.parent_id];
-          tooltip.innerHTML = `
-            <div class="tooltip-title">${d.short_name}</div>
-            <div class="tooltip-domain">
-              <span class="tt-dot" style="background:${domain?.color || '#0284c7'};"></span>
-              ${domain?.short_name || d.parent_id}
-            </div>
-            <div class="tooltip-metrics">
-              <div class="metric-box">
-                <span class="metric-label">Importance</span>
-                <span class="metric-val tabular-nums" style="color: #38bdf8;">${d.importance_score}</span>
-              </div>
-              <div class="metric-box">
-                <span class="metric-label">Complexity</span>
-                <span class="metric-val tabular-nums" style="color: #fb923c;">${d.complexity_score}</span>
-              </div>
-            </div>
-            <div class="tooltip-footer">Click node to inspect full dossier & connections</div>
-          `;
+          tooltip.innerHTML = '<div class="tooltip-title">' + d.short_name + '</div>' +
+            '<div class="tooltip-domain"><span class="tt-dot" style="background:' + (domain?.color || '#0284c7') + ';"></span>' + (domain?.short_name || d.parent_id) + '</div>' +
+            '<div class="tooltip-metrics">' +
+              '<div class="metric-box"><span class="metric-label">Importancia</span><span class="metric-val tabular-nums" style="color: #38bdf8;">' + d.importance_score + '</span></div>' +
+              '<div class="metric-box"><span class="metric-label">Complejidad</span><span class="metric-val tabular-nums" style="color: #fb923c;">' + d.complexity_score + '</span></div>' +
+            '</div>' +
+            '<div class="tooltip-footer">Clic para ver expediente completo y conexiones</div>';
 
           tooltip.classList.add("visible");
           positionTooltip(event);
         }
 
-        function onNodeMove(event, d) {
+        function onNodeMove(event) {
           positionTooltip(event);
         }
 
@@ -2419,7 +2299,6 @@
           updateLinks();
         }
 
-        // Container Hover & Click Handlers (Only in Cluster View)
         function onContainerHover(event, d) {
           state.hoveredContainerId = d.id;
           applyFiltering();
@@ -2434,42 +2313,25 @@
           const avgImp = (domainInitiatives.reduce((acc, n) => acc + n.importance_score, 0) / (domainInitiatives.length || 1)).toFixed(1);
           const avgComp = (domainInitiatives.reduce((acc, n) => acc + n.complexity_score, 0) / (domainInitiatives.length || 1)).toFixed(1);
 
-          tooltip.innerHTML = `
-            <div class="tooltip-kicker">
-              <span class="tt-dot" style="background:${d.color}"></span>
-              Macro-Domain Container
-            </div>
-            <div class="tooltip-title" style="font-size: 13.5px; margin-bottom: 6px;">${containerInfo.Name}</div>
-            <div class="tooltip-scope-block">
-              <div class="tooltip-scope-label">Structural Scope</div>
-              <div class="tooltip-scope-text">${containerInfo.Structural_Scope}</div>
-            </div>
-            <div class="tooltip-metrics" style="margin-top: 8px;">
-              <div class="metric-box">
-                <span class="metric-label">Initiatives</span>
-                <span class="metric-val tabular-nums" style="color:${d.color};">${domainInitiatives.length}</span>
-              </div>
-              <div class="metric-box">
-                <span class="metric-label">Avg Importance</span>
-                <span class="metric-val tabular-nums" style="color:#38bdf8;">${avgImp}</span>
-              </div>
-              <div class="metric-box">
-                <span class="metric-label">Avg Complexity</span>
-                <span class="metric-val tabular-nums" style="color:#fb923c;">${avgComp}</span>
-              </div>
-            </div>
-            <div class="tooltip-footer">Click container to isolate this domain · Click again to restore</div>
-          `;
+          tooltip.innerHTML = '<div class="tooltip-kicker"><span class="tt-dot" style="background:' + d.color + '"></span>Macrodominio Operativo</div>' +
+            '<div class="tooltip-title" style="font-size: 13.5px; margin-bottom: 6px;">' + containerInfo.Name + '</div>' +
+            '<div class="tooltip-scope-block"><div class="tooltip-scope-label">Alcance Estructural</div><div class="tooltip-scope-text">' + containerInfo.Structural_Scope + '</div></div>' +
+            '<div class="tooltip-metrics" style="margin-top: 8px;">' +
+              '<div class="metric-box"><span class="metric-label">Iniciativas</span><span class="metric-val tabular-nums" style="color:' + d.color + ';">' + domainInitiatives.length + '</span></div>' +
+              '<div class="metric-box"><span class="metric-label">Imp. Promedio</span><span class="metric-val tabular-nums" style="color:#38bdf8;">' + avgImp + '</span></div>' +
+              '<div class="metric-box"><span class="metric-label">Comp. Promedio</span><span class="metric-val tabular-nums" style="color:#fb923c;">' + avgComp + '</span></div>' +
+            '</div>' +
+            '<div class="tooltip-footer">Clic para aislar este dominio · Clic de nuevo para restaurar</div>';
 
           tooltip.classList.add("visible");
           positionTooltip(event);
         }
 
-        function onContainerMove(event, d) {
+        function onContainerMove(event) {
           positionTooltip(event);
         }
 
-        function onContainerLeave(event, d) {
+        function onContainerLeave() {
           state.hoveredContainerId = null;
           tooltip.classList.remove("visible");
           applyFiltering();
@@ -2491,13 +2353,10 @@
           const rect = container.getBoundingClientRect();
           const x = event.clientX - rect.left;
           const y = event.clientY - rect.top;
-          tooltip.style.left = `${x}px`;
-          tooltip.style.top = `${y}px`;
+          tooltip.style.left = x + "px";
+          tooltip.style.top = y + "px";
         }
 
-        // -------------------------------------------------------------
-        // 14. CLICK & DETAIL DRAWER LOGIC
-        // -------------------------------------------------------------
         function onNodeClick(event, d) {
           event.stopPropagation();
           state.activeNodeId = d.id;
@@ -2508,31 +2367,33 @@
 
         function openDrawer(d) {
           const domain = domainMap[d.parent_id];
-
-          // Set domain tag
           const tag = document.getElementById("drawer-domain-tag");
-          tag.innerHTML = `
-            <span style="display:inline-block; width:9px; height:9px; border-radius:50%; background:${domain?.color};"></span>
-            ${domain?.short_name || d.parent_id}
-          `;
+          tag.innerHTML = '<span style="display:inline-block; width:9px; height:9px; border-radius:50%; background:' + domain?.color + ';"></span> ' + (domain?.short_name || d.parent_id);
           tag.style.color = domain?.color || "var(--text-secondary)";
 
-          // Title & Category
           document.getElementById("drawer-title").textContent = d.short_name;
           document.getElementById("drawer-category").textContent = d.metadata.category;
 
-          // Score bars
           document.getElementById("drawer-imp-val").textContent = d.importance_score;
           const impBar = document.getElementById("drawer-imp-bar");
-          impBar.style.width = `${d.importance_score}%`;
+          impBar.style.width = d.importance_score + "%";
           impBar.style.background = domain?.color || "#0284c7";
 
           document.getElementById("drawer-comp-val").textContent = d.complexity_score;
           const compBar = document.getElementById("drawer-comp-bar");
-          compBar.style.width = `${d.complexity_score}%`;
+          compBar.style.width = d.complexity_score + "%";
           compBar.style.background = d.complexity_score > 70 ? "#ef4444" : (d.complexity_score > 50 ? "#f59e0b" : "#10b981");
 
-          // Shared Associations
+          const containerInfo = containerLookup[d.parent_id];
+          const scopeBlock = document.getElementById("drawer-scope-block");
+          const scopeText = document.getElementById("drawer-scope-text");
+          if (containerInfo?.Structural_Scope) {
+            scopeBlock.style.display = "flex";
+            scopeText.textContent = containerInfo.Structural_Scope;
+          } else {
+            scopeBlock.style.display = "none";
+          }
+
           const assocList = document.getElementById("drawer-assoc-list");
           assocList.innerHTML = "";
           if (Array.isArray(d.shared_associations) && d.shared_associations.length > 0) {
@@ -2541,12 +2402,8 @@
               const assocDomain = domainMap[assocId];
               const badge = document.createElement("div");
               badge.className = "shared-badge";
-              badge.innerHTML = `
-                <span style="display:inline-block; width:7px; height:7px; border-radius:50%; background:${assocDomain?.color || '#ffffff'}; margin-right:5px;"></span>
-                ${assocDomain?.short_name || assocId}
-              `;
+              badge.innerHTML = '<span style="display:inline-block; width:7px; height:7px; border-radius:50%; background:' + (assocDomain?.color || '#ffffff') + '; margin-right:5px;"></span>' + (assocDomain?.short_name || assocId);
               badge.onclick = () => {
-                // Focus associated domain
                 state.selectedDomains.clear();
                 state.selectedDomains.add(assocId);
                 updateDomainChipButtons();
@@ -2558,7 +2415,6 @@
             document.getElementById("drawer-assoc-block").style.display = "none";
           }
 
-          // Pros
           const prosList = document.getElementById("drawer-pros-list");
           prosList.innerHTML = "";
           d.metadata.pros.forEach(pro => {
@@ -2568,7 +2424,6 @@
             prosList.appendChild(li);
           });
 
-          // Cons
           const consList = document.getElementById("drawer-cons-list");
           consList.innerHTML = "";
           d.metadata.cons.forEach(con => {
@@ -2578,7 +2433,6 @@
             consList.appendChild(li);
           });
 
-          // Requirements
           const reqsList = document.getElementById("drawer-reqs-list");
           reqsList.innerHTML = "";
           d.metadata.requirements.forEach(req => {
@@ -2609,9 +2463,6 @@
           if (e.key === "Escape") closeDrawer();
         });
 
-        // -------------------------------------------------------------
-        // 15. TOOLBAR & FILTER CONTROLS WIRING
-        // -------------------------------------------------------------
         const domainFiltersContainer = document.getElementById("domain-filters-container");
 
         function setupDomainChips() {
@@ -2620,13 +2471,12 @@
             const btn = document.createElement("button");
             btn.className = "domain-chip active";
             btn.dataset.domainId = d.id;
-            btn.innerHTML = `<span class="dot" style="background: ${d.color};"></span>${d.short_name}`;
+            btn.innerHTML = '<span class="dot" style="background: ' + d.color + ';"></span>' + d.short_name;
             btn.onclick = () => {
               if (state.selectedDomains.has(d.id)) {
                 if (state.selectedDomains.size > 1) {
                   state.selectedDomains.delete(d.id);
                 } else {
-                  // Re-enable all if clicking last one off
                   state.selectedDomains = new Set(DATA.parent_domains.map(p => p.id));
                 }
               } else {
@@ -2653,14 +2503,12 @@
 
         setupDomainChips();
 
-        // Search input
         const searchInput = document.getElementById("search-input");
         searchInput.addEventListener("input", (e) => {
           state.searchQuery = e.target.value;
           applyFiltering();
         });
 
-        // Quick wins toggle
         const btnQuickWins = document.getElementById("btn-quick-wins");
         btnQuickWins.addEventListener("click", () => {
           state.quickWinsOnly = !state.quickWinsOnly;
@@ -2668,7 +2516,6 @@
           applyFiltering();
         });
 
-        // Importance slider
         const sliderImp = document.getElementById("slider-importance");
         const lblMinImp = document.getElementById("lbl-min-imp");
         sliderImp.addEventListener("input", (e) => {
@@ -2677,17 +2524,14 @@
           applyFiltering();
         });
 
-        // View Mode Switch (Cluster vs Matrix)
         const viewModeBtns = document.querySelectorAll("#view-mode-control .segmented-btn");
         viewModeBtns.forEach(btn => {
           btn.addEventListener("click", () => {
             viewModeBtns.forEach(b => b.classList.remove("active"));
             btn.classList.add("active");
             state.viewMode = btn.dataset.mode;
-
             renderBackground();
 
-            // Re-tune simulation forces for new view
             if (state.viewMode === "matrix") {
               simulation.force("collide").strength(0.65);
               simulation.force("x").strength(0.85);
@@ -2701,7 +2545,6 @@
           });
         });
 
-        // Reset Filters Button
         document.getElementById("btn-reset-filters").addEventListener("click", () => {
           state.selectedDomains = new Set(DATA.parent_domains.map(d => d.id));
           state.searchQuery = "";
@@ -2716,9 +2559,6 @@
           resetZoom();
         });
 
-        // -------------------------------------------------------------
-        // 16. ZOOM CONTROLS
-        // -------------------------------------------------------------
         function resetZoom() {
           svg.transition().duration(600).call(
             zoom.transform,
@@ -2734,9 +2574,6 @@
         };
         document.getElementById("btn-zoom-reset").onclick = resetZoom;
 
-        // -------------------------------------------------------------
-        // 17. COPY SINGLE HTML & EXPORT ACTIONS
-        // -------------------------------------------------------------
         function showToast(msg) {
           toast.textContent = msg;
           toast.classList.add("visible");
@@ -2748,9 +2585,9 @@
         document.getElementById("btn-copy-code").addEventListener("click", () => {
           const fullHtml = "<!doctype html>\n" + document.documentElement.outerHTML;
           navigator.clipboard.writeText(fullHtml).then(() => {
-            showToast("Entire single HTML file copied to clipboard!");
+            showToast("¡Código HTML copiado al portapapeles!");
           }).catch(() => {
-            showToast("Failed to copy automatically. Use browser inspect or download button.");
+            showToast("No se pudo copiar automáticamente al portapapeles.");
           });
         });
 
@@ -2760,17 +2597,14 @@
           const url = URL.createObjectURL(blob);
           const a = document.createElement("a");
           a.href = url;
-          a.download = "sys_operational_bubble_chart.html";
+          a.download = "soiv_mapa_operativo_burbujas.html";
           document.body.appendChild(a);
           a.click();
           document.body.removeChild(a);
           URL.revokeObjectURL(url);
-          showToast("Downloaded sys_operational_bubble_chart.html!");
+          showToast("¡Descarga iniciada: soiv_mapa_operativo_burbujas.html!");
         });
 
-        // -------------------------------------------------------------
-        // 18. THEME TOGGLE
-        // -------------------------------------------------------------
         const btnTheme = document.getElementById("btn-theme");
         btnTheme.addEventListener("click", () => {
           state.isDarkTheme = !state.isDarkTheme;
@@ -2781,37 +2615,26 @@
           }
         });
 
-        // -------------------------------------------------------------
-        // 19. WINDOW RESIZE HANDLING
-        // -------------------------------------------------------------
         function handleResize() {
           width = container.clientWidth || 1200;
           height = container.clientHeight || 750;
-
           domainCentroids = computeDomainCentroids(width, height);
-
           simulation.force("center", d3.forceCenter(width / 2, height / 2));
           simulation.alpha(0.3).restart();
-
           renderBackground();
         }
 
         window.addEventListener("resize", handleResize);
 
-        // -------------------------------------------------------------
-        // 20. INITIAL RENDER
-        // -------------------------------------------------------------
         renderBackground();
         renderNodes();
 
-        // Canvas click deselects active node
         svg.on("click", (e) => {
           if (e.target.tagName === "svg" || e.target.classList.contains("background-layer")) {
             closeDrawer();
           }
         });
 
-        // Compute summary metrics
         const avgImp = (DATA.nodes.reduce((acc, n) => acc + n.importance_score, 0) / DATA.nodes.length).toFixed(1);
         const quickWinsCount = DATA.nodes.filter(n => n.importance_score >= 85 && n.complexity_score <= 55).length;
         document.getElementById("stat-avg-imp").textContent = avgImp;
